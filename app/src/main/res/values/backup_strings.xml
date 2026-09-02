@@ -1,7 +1,7 @@
 <resources>
     <string name="setting_backup">Backup and restore data</string>
     <string name="backup_title">Backup and restore</string>
-    <string name="backup_scope_note">This backup contains the accounts and transaction history stored in KharjYar's local financial database.</string>
+    <string name="backup_scope_note">This backup contains the accounts and transaction history stored in the local KharjYar financial database.</string>
     <string name="backup_export">Export financial data backup</string>
     <string name="backup_import">Restore financial data backup</string>
     <string name="backup_warning">Restoring a backup replaces the financial data currently stored on this device.</string>

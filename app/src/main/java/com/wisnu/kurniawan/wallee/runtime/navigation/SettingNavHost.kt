@@ -6,6 +6,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.navigation
+import com.wisnu.kurniawan.wallee.features.backup.ui.BackupScreen
 import com.wisnu.kurniawan.wallee.features.localized.ui.LanguageScreen
 import com.wisnu.kurniawan.wallee.features.localized.ui.LocalizedViewModel
 import com.wisnu.kurniawan.wallee.features.logout.ui.LogoutScreen
@@ -27,6 +28,12 @@ fun NavGraphBuilder.SettingNavHost(
             SettingScreen(
                 viewModel = viewModel,
                 onClick = { navController.navigate(it) }
+            )
+        }
+        bottomSheet(SettingFlow.Backup.route) {
+            bottomSheetConfig.value = DefaultBottomSheetConfig
+            BackupScreen(
+                onClickBack = { navController.navigateUp() }
             )
         }
         bottomSheet(SettingFlow.Theme.route) {

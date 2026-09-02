@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name" translatable="false">Wallee</string>
+    <string name="app_name" translatable="false">خرج‌یار</string>
 
     <string name="show_more">Show More</string>
     <string name="add">Add</string>
@@ -63,6 +63,7 @@
     <string name="setting_logout">Log out</string>
     <string name="setting_logout_confirm">Log out?</string>
     <string name="setting_language">Language</string>
+    <string name="setting_language_persian" translatable="false">فارسی</string>
     <string name="setting_language_english" translatable="false">English</string>
     <string name="setting_language_indonesia" translatable="false">Bahasa Indonesia</string>
 

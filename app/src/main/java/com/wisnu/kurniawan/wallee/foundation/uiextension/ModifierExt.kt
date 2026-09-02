@@ -18,17 +18,11 @@ import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.positionInParent
 import androidx.compose.ui.unit.dp
 
-fun Modifier.guide() = this.then(
-    background(Color.Red)
-)
+fun Modifier.guide() = background(Color.Red)
 
-fun Modifier.guide2() = this.then(
-    background(Color.Green)
-)
+fun Modifier.guide2() = background(Color.Green)
 
-fun Modifier.guide3() = this.then(
-    background(Color.Blue)
-)
+fun Modifier.guide3() = background(Color.Blue)
 
 fun Modifier.drawGrowingCircle(
     color: Color,
@@ -49,7 +43,7 @@ fun Modifier.onPositionInParentChanged(
     onChange: (LayoutCoordinates) -> Unit
 ) = composed {
     var lastPosition by remember { mutableStateOf(Offset.Zero) }
-    Modifier.onGloballyPositioned { coordinates ->
+    onGloballyPositioned { coordinates ->
         if (coordinates.positionInParent() != lastPosition) {
             lastPosition = coordinates.positionInParent()
             onChange(coordinates)
@@ -58,4 +52,4 @@ fun Modifier.onPositionInParentChanged(
 }
 
 @Stable
-fun Modifier.paddingCell() = this.padding(horizontal = 16.dp, vertical = 8.dp)
+fun Modifier.paddingCell() = padding(horizontal = 16.dp, vertical = 8.dp)

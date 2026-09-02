@@ -70,6 +70,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 private const val SUPPORT_EMAIL = "AS.Developers.Support@Gmail.Com"
+private const val RELEASES_URL = "https://github.com/waxew/AS-KharjYar/releases"
 private const val PROFILE_PREFS = "as_drawer_profile"
 private const val PROFILE_URI_KEY = "profile_uri"
 private const val PROFILE_NAME_KEY = "display_name"
@@ -246,6 +247,20 @@ fun AsNavigationDrawer(
                 confirmButton = {
                     TextButton(onClick = { showAboutDialog = false }) {
                         Text(stringResource(R.string.as_drawer_close))
+                    }
+                },
+                dismissButton = {
+                    TextButton(
+                        onClick = {
+                            showAboutDialog = false
+                            runCatching {
+                                context.startActivity(
+                                    Intent(Intent.ACTION_VIEW, Uri.parse(RELEASES_URL))
+                                )
+                            }
+                        }
+                    ) {
+                        Text(stringResource(R.string.as_drawer_check_updates))
                     }
                 },
                 icon = { Icon(Icons.Default.Info, contentDescription = null) },

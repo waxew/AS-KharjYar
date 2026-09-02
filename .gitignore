@@ -9,5 +9,7 @@
 .externalNativeBuild
 .cxx
 /reports
-# Keystore files
+# Keystore and signing files must never be committed.
 *.jks
+keystore.properties
+*.keystore

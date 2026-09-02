@@ -54,7 +54,7 @@
     <string name="setting_title">Main menu</string>
     <string name="setting_theme">Themes</string>
     <string name="setting_theme_automatic">Automatic</string>
-    <string name="setting_theme_wallpaper" translatable="false">Wallpaper</string>
+    <string name="setting_theme_wallpaper">Wallpaper</string>
     <string name="setting_theme_light">Daylight</string>
     <string name="setting_theme_twilight">Twilight</string>
     <string name="setting_theme_night">Midnight</string>
@@ -90,7 +90,7 @@
     <string name="transaction_edit_note_income_hint">Example \"For saving\"</string>
     <string name="transaction_edit_note_transfer_hint">Example \"For subscription this month\"</string>
     <string name="transaction_summary">Summary</string>
-    <string name="transaction_cash_flow" translatable="false">Cash Flow</string>
+    <string name="transaction_cash_flow">Cash Flow</string>
     <string name="transaction_this_month">This Month</string>
     <string name="transaction_last">Last Transaction</string>
     <string name="transaction_last_no_data_title">Keep Creating Transaction</string>

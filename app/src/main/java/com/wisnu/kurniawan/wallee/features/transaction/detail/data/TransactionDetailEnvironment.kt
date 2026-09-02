@@ -1,8 +1,5 @@
 package com.wisnu.kurniawan.wallee.features.transaction.detail.data
 
-import com.google.firebase.analytics.FirebaseAnalytics
-import com.wisnu.foundation.libanalyticsmanager.AnalyticsManager
-
 import com.wisnu.kurniawan.wallee.foundation.datasource.local.LocalManager
 import com.wisnu.kurniawan.wallee.foundation.extension.isAmountChanged
 import com.wisnu.kurniawan.wallee.foundation.extension.isChanged
@@ -33,7 +30,6 @@ class TransactionDetailEnvironment @Inject constructor(
     private val localManager: LocalManager,
     private val dateTimeProvider: DateTimeProvider,
     private val idProvider: IdProvider,
-    private val analyticManager: AnalyticsManager
 ) : ITransactionDetailEnvironment {
 
     override fun getAccounts(): Flow<List<Account>> {
@@ -53,13 +49,8 @@ class TransactionDetailEnvironment @Inject constructor(
     }
 
     override fun trackSaveTransactionButtonClicked() {
-        analyticManager.trackEvent(
-            FirebaseAnalytics.Event.SELECT_CONTENT,
-            mapOf(
-                FirebaseAnalytics.Param.SCREEN_NAME to "transaction_detail",
-                FirebaseAnalytics.Param.ITEM_NAME to "button_save_transaction",
-            ),
-        )
+        // AS Team build intentionally keeps analytics disabled until an AS-owned analytics
+        // service is configured. Business logic must never depend on telemetry availability.
     }
 
     /**

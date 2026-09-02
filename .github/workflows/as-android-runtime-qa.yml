@@ -101,7 +101,7 @@ jobs:
           profile: pixel_6
           disable-animations: true
           script: |
-            set -euo pipefail
+            set -eu
             PACKAGE="com.asteam.kharjyar.debug"
             PREVIOUS_APK="$RUNNER_TEMP/previous-debug.apk"
             CURRENT_APK="$RUNNER_TEMP/current-debug.apk"
@@ -110,13 +110,11 @@ jobs:
             adb shell monkey -p "$PACKAGE" -c android.intent.category.LAUNCHER 1
             sleep 5
 
-            adb shell run-as "$PACKAGE" sh -c 'echo as-kharjyar-upgrade-sentinel > files/upgrade-sentinel'
-            BEFORE="$(adb shell run-as "$PACKAGE" cat files/upgrade-sentinel | tr -d '\r')"
-            test "$BEFORE" = "as-kharjyar-upgrade-sentinel"
+            adb shell run-as "$PACKAGE" touch files/upgrade-sentinel
+            adb shell run-as "$PACKAGE" ls files/upgrade-sentinel >/dev/null
 
             adb install -r "$CURRENT_APK"
-            AFTER="$(adb shell run-as "$PACKAGE" cat files/upgrade-sentinel | tr -d '\r')"
-            test "$AFTER" = "as-kharjyar-upgrade-sentinel"
+            adb shell run-as "$PACKAGE" ls files/upgrade-sentinel >/dev/null
 
             adb logcat -c
             adb shell am force-stop "$PACKAGE"

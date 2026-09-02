@@ -1,8 +1,8 @@
 package com.wisnu.kurniawan.wallee.features.update.data
 
-import kotlin.test.Test
-import kotlin.test.assertEquals
-import kotlin.test.assertNull
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNull
+import org.junit.Test
 
 class ReleaseVersionParserTest {
 
@@ -17,5 +17,10 @@ class ReleaseVersionParserTest {
     @Test
     fun rejects_tags_without_version_code() {
         assertNull(ReleaseVersionParser.parse("v1.2.0"))
+    }
+
+    @Test
+    fun rejects_non_numeric_version_code() {
+        assertNull(ReleaseVersionParser.parse("v1.2.0+beta"))
     }
 }

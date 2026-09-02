@@ -35,12 +35,14 @@ import androidx.navigation.navigation
 import com.wisnu.kurniawan.wallee.features.dashboard.ui.DashboardBottomBar
 import com.wisnu.kurniawan.wallee.features.dashboard.ui.DashboardHostViewModel
 import com.wisnu.kurniawan.wallee.features.dashboard.ui.DashboardNavRail
+import com.wisnu.kurniawan.wallee.features.drawer.ui.AsNavigationDrawer
 import com.wisnu.kurniawan.wallee.foundation.uiextension.navigateToTopLevel
 import com.wisnu.kurniawan.wallee.foundation.uiextension.rememberBottomSheetNavigator
 import com.wisnu.kurniawan.wallee.runtime.navigation.ARG_IS_DUAL_PORTRAIT
 import com.wisnu.kurniawan.wallee.runtime.navigation.AccountDetailNavHost
 import com.wisnu.kurniawan.wallee.runtime.navigation.BottomSheetConfig
 import com.wisnu.kurniawan.wallee.runtime.navigation.DefaultBottomSheetConfig
+import com.wisnu.kurniawan.wallee.runtime.navigation.SettingFlow
 import com.wisnu.kurniawan.wallee.runtime.navigation.TransactionDetailNavHost
 
 fun NavGraphBuilder.HomeNavHost(
@@ -88,29 +90,42 @@ private fun SmallScreen(
     val currentDestination = navBackStackEntry?.destination
     val viewModel = hiltViewModel<DashboardHostViewModel>()
 
-    ModalBottomSheetLayout(
-        bottomSheetNavigator = bottomSheetNavigator,
-        sheetShape = bottomSheetConfig.value.sheetShape,
-        scrimColor = if (bottomSheetConfig.value.showScrim) {
-            ModalBottomSheetDefaults.scrimColor
-        } else {
-            Color.Transparent
-        }
+    // AS Team drawer wraps the complete home surface so the hamburger is consistent on all tabs.
+    AsNavigationDrawer(
+        onHome = {
+            homeNavController.navigateToTopLevel(TransactionSummaryFlow.Root.route)
+        },
+        onSettings = {
+            navController.navigate(SettingFlow.Root.route)
+        },
+        onTheme = {
+            navController.navigate(SettingFlow.Theme.route)
+        },
     ) {
-        Box(Modifier.fillMaxSize()) {
-            NavHostSmall(
-                navController,
-                homeNavController,
-            )
+        ModalBottomSheetLayout(
+            bottomSheetNavigator = bottomSheetNavigator,
+            sheetShape = bottomSheetConfig.value.sheetShape,
+            scrimColor = if (bottomSheetConfig.value.showScrim) {
+                ModalBottomSheetDefaults.scrimColor
+            } else {
+                Color.Transparent
+            }
+        ) {
+            Box(Modifier.fillMaxSize()) {
+                NavHostSmall(
+                    navController,
+                    homeNavController,
+                )
 
-            DashboardBottomBar(
-                modifier = Modifier.align(Alignment.BottomStart),
-                viewModel = viewModel,
-                currentDestination = currentDestination,
-                onTabClick = {
-                    homeNavController.navigateToTopLevel(it)
-                }
-            )
+                DashboardBottomBar(
+                    modifier = Modifier.align(Alignment.BottomStart),
+                    viewModel = viewModel,
+                    currentDestination = currentDestination,
+                    onTabClick = {
+                        homeNavController.navigateToTopLevel(it)
+                    }
+                )
+            }
         }
     }
 }
@@ -133,68 +148,81 @@ private fun LargeScreen(
     val currentDestination = navBackStackEntry?.destination
     val viewModel = hiltViewModel<DashboardHostViewModel>()
 
-    Row(modifier = Modifier.fillMaxSize()) {
-        // Left column
-        Box(modifier = Modifier.fillMaxHeight().weight(weightLeft)) {
-            ModalBottomSheetLayout(
-                bottomSheetNavigator = leftBottomSheetNavigator,
-                sheetShape = leftBottomSheetConfig.value.sheetShape,
-                scrimColor = if (leftBottomSheetConfig.value.showScrim) {
-                    ModalBottomSheetDefaults.scrimColor
-                } else {
-                    Color.Transparent
-                }
-            ) {
-                Row(
-                    Modifier
-                        .fillMaxSize()
-                        .windowInsetsPadding(
-                            WindowInsets.safeDrawing.only(
-                                WindowInsetsSides.Horizontal
-                            )
-                        )
+    // Large/tablet layouts use the same product drawer; business split navigation stays intact.
+    AsNavigationDrawer(
+        onHome = {
+            leftNavController.navigateToTopLevel(TransactionSummaryFlow.Root.route)
+        },
+        onSettings = {
+            mainNavController.navigate(SettingFlow.Root.route)
+        },
+        onTheme = {
+            mainNavController.navigate(SettingFlow.Theme.route)
+        },
+    ) {
+        Row(modifier = Modifier.fillMaxSize()) {
+            // Left column
+            Box(modifier = Modifier.fillMaxHeight().weight(weightLeft)) {
+                ModalBottomSheetLayout(
+                    bottomSheetNavigator = leftBottomSheetNavigator,
+                    sheetShape = leftBottomSheetConfig.value.sheetShape,
+                    scrimColor = if (leftBottomSheetConfig.value.showScrim) {
+                        ModalBottomSheetDefaults.scrimColor
+                    } else {
+                        Color.Transparent
+                    }
                 ) {
-                    DashboardNavRail(
-                        viewModel = viewModel,
-                        currentDestination = currentDestination,
-                        onTabClick = {
-                            // TODO should is make the right nav back?
-                            leftNavController.navigateToTopLevel(it)
-                        }
-                    )
+                    Row(
+                        Modifier
+                            .fillMaxSize()
+                            .windowInsetsPadding(
+                                WindowInsets.safeDrawing.only(
+                                    WindowInsetsSides.Horizontal
+                                )
+                            )
+                    ) {
+                        DashboardNavRail(
+                            viewModel = viewModel,
+                            currentDestination = currentDestination,
+                            onTabClick = {
+                                // TODO should is make the right nav back?
+                                leftNavController.navigateToTopLevel(it)
+                            }
+                        )
 
-                    NavHostLeft(
-                        mainNavController = mainNavController,
-                        leftNavController = leftNavController,
-                        rightNavController = rightNavController
-                    )
+                        NavHostLeft(
+                            mainNavController = mainNavController,
+                            leftNavController = leftNavController,
+                            rightNavController = rightNavController
+                        )
+                    }
                 }
             }
-        }
 
-        // Divider
-        Box(
-            modifier = Modifier
-                .fillMaxHeight()
-                .width(1.dp)
-                .background(color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.12f))
-        )
+            // Divider
+            Box(
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .width(1.dp)
+                    .background(color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.12f))
+            )
 
-        // Right column
-        Box(modifier = Modifier.fillMaxHeight().weight(weightRight)) {
-            ModalBottomSheetLayout(
-                bottomSheetNavigator = rightBottomSheetNavigator,
-                sheetShape = rightBottomSheetConfig.value.sheetShape,
-                scrimColor = if (rightBottomSheetConfig.value.showScrim) {
-                    ModalBottomSheetDefaults.scrimColor
-                } else {
-                    Color.Transparent
+            // Right column
+            Box(modifier = Modifier.fillMaxHeight().weight(weightRight)) {
+                ModalBottomSheetLayout(
+                    bottomSheetNavigator = rightBottomSheetNavigator,
+                    sheetShape = rightBottomSheetConfig.value.sheetShape,
+                    scrimColor = if (rightBottomSheetConfig.value.showScrim) {
+                        ModalBottomSheetDefaults.scrimColor
+                    } else {
+                        Color.Transparent
+                    }
+                ) {
+                    NavHostLargeRight(
+                        rightNavController = rightNavController,
+                        rightBottomSheetConfig = rightBottomSheetConfig
+                    )
                 }
-            ) {
-                NavHostLargeRight(
-                    rightNavController = rightNavController,
-                    rightBottomSheetConfig = rightBottomSheetConfig
-                )
             }
         }
     }

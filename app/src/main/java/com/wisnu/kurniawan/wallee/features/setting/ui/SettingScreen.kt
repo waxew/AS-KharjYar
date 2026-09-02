@@ -31,17 +31,11 @@ fun SettingScreen(
                 SettingItem(
                     onClick = {
                         val route = when (item) {
-                            is SettingItem.Logout -> {
-                                SettingFlow.Logout.route
-                            }
-                            is SettingItem.Theme -> {
-                                SettingFlow.Theme.route
-                            }
-                            is SettingItem.Language -> {
-                                SettingFlow.Language.route
-                            }
+                            is SettingItem.Backup -> SettingFlow.Backup.route
+                            is SettingItem.Logout -> SettingFlow.Logout.route
+                            is SettingItem.Theme -> SettingFlow.Theme.route
+                            is SettingItem.Language -> SettingFlow.Language.route
                         }
-
                         onClick(route)
                     },
                     stringResource(item.title)

@@ -1,0 +1,16 @@
+<resources>
+    <string name="setting_backup">Cadangkan dan pulihkan data</string>
+    <string name="backup_title">Pencadangan dan pemulihan</string>
+    <string name="backup_scope_note">Cadangan ini berisi akun dan riwayat transaksi yang tersimpan di basis data keuangan lokal KharjYar.</string>
+    <string name="backup_export">Ekspor cadangan data keuangan</string>
+    <string name="backup_import">Pulihkan cadangan data keuangan</string>
+    <string name="backup_warning">Memulihkan cadangan akan mengganti data keuangan yang saat ini tersimpan di perangkat ini.</string>
+    <string name="backup_export_success">Cadangan berhasil disimpan.</string>
+    <string name="backup_export_failed">File cadangan tidak dapat disimpan.</string>
+    <string name="backup_restore_failed">Cadangan ini tidak valid, rusak, atau tidak kompatibel dengan versi KharjYar ini.</string>
+    <string name="backup_restore_confirm_title">Ganti data keuangan saat ini?</string>
+    <string name="backup_restore_confirm_message">Akun dan transaksi yang saat ini tersimpan di perangkat akan diganti dengan cadangan yang dipilih. KharjYar akan dimulai ulang setelah pemulihan berhasil.</string>
+    <string name="backup_restore_confirm">Pulihkan</string>
+    <string name="backup_cancel">Batal</string>
+    <string name="backup_busy">Memproses cadangan…</string>
+</resources>

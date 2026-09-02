@@ -1,0 +1,35 @@
+<resources>
+    <string name="as_drawer_home">Beranda</string>
+    <string name="as_drawer_settings">Pengaturan</string>
+    <string name="as_drawer_theme">Tema &amp; tampilan</string>
+    <string name="as_drawer_share">Bagikan aplikasi</string>
+    <string name="as_drawer_contact">Hubungi kami</string>
+    <string name="as_drawer_about">Tentang aplikasi</string>
+    <string name="as_drawer_footer">Develop by AS Team Group • versi %1$s</string>
+    <string name="as_drawer_share_text">%1$s — Pengelolaan pengeluaran dan akun pribadi, dikembangkan oleh AS Team</string>
+    <string name="as_drawer_share_chooser">Bagikan %1$s</string>
+    <string name="as_drawer_open">Buka menu utama</string>
+    <string name="as_drawer_close">Tutup</string>
+    <string name="as_drawer_check_updates">Periksa pembaruan</string>
+    <string name="as_drawer_update_checking">Memeriksa…</string>
+    <string name="as_drawer_update_available_title">Pembaruan tersedia</string>
+    <string name="as_drawer_update_available_body">KharjYar %1$s tersedia. Buka halaman rilis resmi untuk memperbarui.</string>
+    <string name="as_drawer_update_now">Buka rilis</string>
+    <string name="as_drawer_update_later">Nanti</string>
+    <string name="as_drawer_up_to_date_title">KharjYar sudah terbaru</string>
+    <string name="as_drawer_up_to_date_body">Anda sudah menggunakan versi terbaru yang dipublikasikan.</string>
+    <string name="as_drawer_no_release_title">Belum ada rilis publik</string>
+    <string name="as_drawer_no_release_body">Belum ada rilis publik KharjYar di GitHub.</string>
+    <string name="as_drawer_update_failed_title">Tidak dapat memeriksa pembaruan</string>
+    <string name="as_drawer_update_failed_body">Periksa koneksi internet lalu coba lagi.</string>
+    <string name="as_drawer_ok">OK</string>
+    <string name="as_drawer_about_body">%1$s membantu mengelola pengeluaran, pemasukan, akun, dan transaksi pribadi.\n\nDevelop by AS Team Group\nDukungan: %2$s\nVersi: %3$s</string>
+    <string name="as_drawer_profile">Profil</string>
+    <string name="as_drawer_version">Versi %1$s</string>
+    <string name="as_drawer_default_user">Pengguna KharjYar</string>
+    <string name="as_drawer_edit_name">Edit nama tampilan</string>
+    <string name="as_drawer_name_label">Nama tampilan</string>
+    <string name="as_drawer_save">Simpan</string>
+    <string name="as_drawer_cancel">Batal</string>
+    <string name="as_drawer_name_hint">Ketuk nama untuk mengeditnya</string>
+</resources>

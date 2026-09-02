@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace 'com.wisnu.kurniawan.benchmark'
+    namespace 'com.asteam.kharjyar.benchmark'
     compileSdk 34
 
     compileOptions {

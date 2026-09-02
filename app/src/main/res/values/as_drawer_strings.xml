@@ -14,4 +14,10 @@
     <string name="as_drawer_about_body">%1$s helps manage expenses, income, accounts, and personal transactions.\n\nDevelop by AS Team Group\nSupport: %2$s\nVersion: %3$s</string>
     <string name="as_drawer_profile">Profile</string>
     <string name="as_drawer_version">Version %1$s</string>
+    <string name="as_drawer_default_user">KharjYar User</string>
+    <string name="as_drawer_edit_name">Edit display name</string>
+    <string name="as_drawer_name_label">Display name</string>
+    <string name="as_drawer_save">Save</string>
+    <string name="as_drawer_cancel">Cancel</string>
+    <string name="as_drawer_name_hint">Tap the name to edit it</string>
 </resources>

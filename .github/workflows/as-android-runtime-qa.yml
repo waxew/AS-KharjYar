@@ -100,33 +100,4 @@ jobs:
           arch: x86_64
           profile: pixel_6
           disable-animations: true
-          script: |
-            set -eu
-            PACKAGE="com.asteam.kharjyar.debug"
-            PREVIOUS_APK="$RUNNER_TEMP/previous-debug.apk"
-            CURRENT_APK="$RUNNER_TEMP/current-debug.apk"
-
-            adb install "$PREVIOUS_APK"
-            adb shell monkey -p "$PACKAGE" -c android.intent.category.LAUNCHER 1
-            sleep 5
-
-            adb shell run-as "$PACKAGE" touch files/upgrade-sentinel
-            adb shell run-as "$PACKAGE" ls files/upgrade-sentinel >/dev/null
-
-            adb install -r "$CURRENT_APK"
-            adb shell run-as "$PACKAGE" ls files/upgrade-sentinel >/dev/null
-
-            adb logcat -c
-            adb shell am force-stop "$PACKAGE"
-            adb shell monkey -p "$PACKAGE" -c android.intent.category.LAUNCHER 1
-            sleep 8
-
-            PID="$(adb shell pidof -s "$PACKAGE" | tr -d '\r')"
-            test -n "$PID"
-
-            if adb logcat -d -b crash | grep -F "$PACKAGE"; then
-              echo "Crash detected after upgrade" >&2
-              exit 1
-            fi
-
-            echo "Upgrade persistence and launch smoke test passed."
+          script: bash .github/scripts/runtime_upgrade_smoke.sh

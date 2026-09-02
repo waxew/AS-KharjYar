@@ -7,10 +7,7 @@ buildscript {
     dependencies {
         classpath libs.android.gradlePlugin
         classpath libs.jetbrains.kotlin.gradlePlugin
-        classpath libs.google.firebase.crashlytics.gradlePlugin
-        classpath libs.google.firebase.performance.gradlePlugin
         classpath libs.google.hilt.gradlePlugin
-        classpath libs.google.servicesPlugin
         classpath libs.google.kspPlugin
         classpath libs.room.gradlePlugin
         classpath libs.protobuf.gradlePlugin
@@ -32,6 +29,3 @@ allprojects {
 task clean(type: Delete) {
     delete rootProject.buildDir
 }
-
-
-

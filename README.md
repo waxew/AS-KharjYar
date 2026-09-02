@@ -1,49 +1,68 @@
-![build](https://github.com/wisnukurniawan/Compose-Wallee/actions/workflows/build.yml/badge.svg)
+# AS-KharjYar | خرج‌یار
 
-## Compose playground: Expense Tracker
+[![AS Android CI](https://github.com/waxew/AS-KharjYar/actions/workflows/as-android-ci.yml/badge.svg)](https://github.com/waxew/AS-KharjYar/actions/workflows/as-android-ci.yml)
 
-<a href='https://play.google.com/store/apps/details?id=com.wisnu.kurniawan.wallee'><img alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png' width=240/></a>
+«خرج‌یار» نسخه شخصی‌سازی‌شده AS Team برای مدیریت هزینه‌ها، درآمدها، حساب‌ها و تراکنش‌های شخصی است. رابط اصلی برنامه با Jetpack Compose پیاده‌سازی شده و داده‌های مالی در لایه محلی برنامه نگهداری می‌شوند.
 
-Compose playground for learning purpose
+## هویت پروژه
 
-* UI completely in [Jetpack Compose](https://developer.android.com/jetpack/compose)
-* Uses [Kotlin Coroutines](https://kotlinlang.org/docs/reference/coroutines/coroutines-guide.html)
-* Uses [Kotlin Flow](https://kotlinlang.org/docs/flow.html)
-* Uses many of the [Architecture Components](https://developer.android.com/topic/libraries/architecture/), including: Room, DataStore, Navigation, ViewModel
-* Uses [Hilt](https://dagger.dev/hilt/) for dependency injection
-* Uses [Java 8+ API desugaring support](https://developer.android.com/studio/write/java8-support#library-desugaring) for date and time usage
+- Repository: `AS-KharjYar`
+- Application ID: `com.asteam.kharjyar`
+- Product name: `خرج‌یار`
+- Current AS version: `1.2.0` (`versionCode 12`)
+- Primary language: Persian (`fa`)
+- Minimum SDK: 21
+- Target SDK: 35
+- Java: 17
 
-<img src="art/ps-1.png" width="260">  <img src="art/ps-2.png" width="260">  <img src="art/ps-3.png" width="260">
+## تغییرات AS Team
 
-## Large screen
+- تغییر نام محصول به «خرج‌یار» و Application ID به `com.asteam.kharjyar`
+- افزودن زبان فارسی و شروع نصب جدید با locale فارسی
+- پشتیبانی RTL برای رابط فارسی
+- افزودن منوی همبرگری سمت راست مطابق الگوی مشترک AS Team
+- نمایش نسخه، درباره نرم‌افزار، تماس با پشتیبانی و اشتراک‌گذاری از Drawer
+- حذف اتصال Firebase Analytics و Crash Reporting پروژه upstream از نسخه AS
+- محلی نگه‌داشتن تحلیل تراکنش‌ها
+- جداکردن اطلاعات signing از Git و نگهداری آن در local/CI secrets
+- افزودن GitHub Actions برای ساخت Debug APK روی هر push و pull request
 
-<img src="art/demo.gif" width="400">
+## فناوری‌ها
 
-<img src="art/demo2.gif" width="400">
+- Kotlin
+- Jetpack Compose
+- Coroutines و Flow
+- Room
+- DataStore
+- Navigation Compose
+- Hilt
+- Material 3
 
-## Prerequisites
+## ساخت پروژه
 
-* Android Studio Narwhal Feature Drop | 2025.1.2
-* Min SDK 21
-* Target SDK 35
-* AGP 8.9.0
-* Java 17
-* Kotlin 2.1.10
+```bash
+./gradlew assembleDebug
+```
 
-## Setup
+برای تست واحد:
 
-1. Clone this repository, `git clone https://github.com/wisnukurniawan/Compose-Wallee.git`
-2. Open via [Android studio](https://developer.android.com/studio)
-3. Sync the project, **File -> Sync Project with Gradle files**
+```bash
+./gradlew testDebug
+```
 
-## How to build
+اطلاعات signing نسخه Release نباید داخل Git قرار بگیرد. فایل `keystore.properties` فقط باید به‌صورت local یا از طریق CI secrets تأمین شود.
 
-* Generate debug apk `./gradlew assembleDebug`
-* Run unit test `./gradlew testDebug`
-* Install on connected device `./gradlew installDebug`
+## ساختار توسعه AS
 
-## Others
+تغییرات برندینگ، فارسی‌سازی و قابلیت‌های اختصاصی AS Team روی همین مخزن ادامه پیدا می‌کنند. هنگام تغییر مدل‌های Room/DataStore باید Migration سازگار نوشته شود تا نسخه‌های بعدی بتوانند روی نسخه قبلی نصب شوند و اطلاعات کاربر حفظ شود.
 
-* [Mercury architecture](https://github.com/wisnukurniawan/Compose-ToDo/blob/main/doc/architecture.md)
-* [Project structure](https://github.com/wisnukurniawan/Compose-ToDo/blob/main/doc/project-structure.md)
-* [Modularization](https://github.com/wisnukurniawan/Compose-ToDo/blob/main/doc/module.md)
+## منبع و مجوز
+
+این پروژه بر پایه پروژه متن‌باز [Compose Expense / Wallee](https://github.com/wisnukurniawan/Compose-Expense) از `wisnukurniawan` توسعه داده شده است.
+
+سورس upstream تحت **Apache License 2.0** منتشر شده است. فایل `LICENSE` اصلی در این مخزن حفظ شده و attribution پروژه اصلی نیز در این README ثبت شده است. تغییرات و شخصی‌سازی‌های AS Team به‌عنوان تغییرات مشتق‌شده روی همان پایه انجام می‌شوند.
+
+## AS Team
+
+Develop by AS Team Group  
+Support: `AS.Developers.Support@Gmail.Com`

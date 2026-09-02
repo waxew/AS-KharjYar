@@ -34,7 +34,14 @@ fun Currency.getScale(): Int {
 }
 
 fun Currency.getLocale(): Locale {
-    val lang = COUNTRY_DATA[countryCode]?.lang
+    // AS Team: Iran must use Persian formatting even though the inherited country dataset
+    // currently marks IR with a Kurdish locale code. Keeping this override here avoids a
+    // broad rewrite of the generated country/currency data while making IRR formatting correct.
+    val lang = if (countryCode == "IR") {
+        "fa"
+    } else {
+        COUNTRY_DATA[countryCode]?.lang
+    }
 
     return if (lang != null) {
         Locale(lang, countryCode)

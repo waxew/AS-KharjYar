@@ -5,18 +5,27 @@ import android.telephony.TelephonyManager
 import java.util.*
 
 /**
- * Returns the upper-case ISO 3166-1 alpha-2 country code of the current registered operator's MCC
- * (Mobile Country Code), or the country code of the default Locale if not available.
+ * Returns the best available ISO 3166-1 alpha-2 country code for currency recommendation.
  *
- * @param context A context to access the telephony service. If null, only the Locale can be used.
- * @return The upper-case ISO 3166-1 alpha-2 country code, or an empty String if unavailable.
+ * AS Team fallback order:
+ * 1. Current mobile network country.
+ * 2. SIM country when mobile network information is unavailable.
+ * 3. Device locale for Wi-Fi tablets, emulators, or devices without telephony service.
+ *
+ * No phone-state permission is requested for this lookup.
  */
 fun getCountryCode(context: Context): String {
-    val telephonyManager: TelephonyManager = context.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
-    val countryCode: String = telephonyManager.networkCountryIso
-    return if (countryCode.isNotEmpty()) {
-        countryCode.uppercase(Locale.US)
-    } else {
-        Locale.getDefault().country.uppercase(Locale.US)
-    }
+    val telephonyManager = context.getSystemService(Context.TELEPHONY_SERVICE) as? TelephonyManager
+
+    val countryCode = sequenceOf(
+        telephonyManager?.networkCountryIso,
+        telephonyManager?.simCountryIso,
+        Locale.getDefault().country,
+    )
+        .filterNotNull()
+        .map { it.trim() }
+        .firstOrNull { it.length == 2 }
+        .orEmpty()
+
+    return countryCode.uppercase(Locale.US)
 }

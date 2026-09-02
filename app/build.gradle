@@ -60,6 +60,14 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    // The app changes locale at runtime. Keep every bundled language in the base module so an
+    // offline language switch never depends on Play Core language delivery.
+    bundle {
+        language {
+            enableSplit = false
+        }
+    }
+
     signingConfigs {
         if (hasReleaseSigning) {
             release {

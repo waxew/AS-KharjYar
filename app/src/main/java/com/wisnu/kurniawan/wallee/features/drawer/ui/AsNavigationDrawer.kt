@@ -50,20 +50,22 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
+import com.wisnu.kurniawan.wallee.R
 import kotlinx.coroutines.launch
 
 private const val SUPPORT_EMAIL = "AS.Developers.Support@Gmail.Com"
-private const val APP_TITLE = "خرج‌یار"
 
 /**
  * Shared AS Team navigation drawer for KharjYar.
  *
  * The drawer deliberately owns only product-level actions. Business navigation stays in the
  * existing app NavHost so importing this component cannot corrupt the expense database flow.
- * LayoutDirection.Rtl makes Material's start drawer open from the physical right side.
+ * The drawer itself is forced to RTL so Material opens it from the physical right side, while
+ * the business content restores the language-specific direction captured from the app locale.
  */
 @Composable
 fun AsNavigationDrawer(
@@ -73,9 +75,15 @@ fun AsNavigationDrawer(
     content: @Composable () -> Unit,
 ) {
     val context = LocalContext.current
+    val appLayoutDirection = LocalLayoutDirection.current
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
     var showAboutDialog by remember { mutableStateOf(false) }
+
+    val appTitle = stringResource(R.string.app_name)
+    val shareText = stringResource(R.string.as_drawer_share_text, appTitle)
+    val shareChooserTitle = stringResource(R.string.as_drawer_share_chooser, appTitle)
+    val openMenuDescription = stringResource(R.string.as_drawer_open)
 
     val versionName = remember(context.packageName) {
         runCatching {
@@ -110,55 +118,53 @@ fun AsNavigationDrawer(
                     Spacer(Modifier.height(8.dp))
 
                     NavigationDrawerItem(
-                        label = { Text("خانه") },
+                        label = { Text(stringResource(R.string.as_drawer_home)) },
                         selected = false,
                         icon = { Icon(Icons.Default.Home, contentDescription = null) },
                         onClick = { closeThen(onHome) },
                         modifier = Modifier.padding(horizontal = 12.dp),
                     )
                     NavigationDrawerItem(
-                        label = { Text("تنظیمات") },
+                        label = { Text(stringResource(R.string.as_drawer_settings)) },
                         selected = false,
                         icon = { Icon(Icons.Default.Settings, contentDescription = null) },
                         onClick = { closeThen(onSettings) },
                         modifier = Modifier.padding(horizontal = 12.dp),
                     )
                     NavigationDrawerItem(
-                        label = { Text("پوسته و ظاهر") },
+                        label = { Text(stringResource(R.string.as_drawer_theme)) },
                         selected = false,
                         icon = { Icon(Icons.Default.DarkMode, contentDescription = null) },
                         onClick = { closeThen(onTheme) },
                         modifier = Modifier.padding(horizontal = 12.dp),
                     )
                     NavigationDrawerItem(
-                        label = { Text("اشتراک‌گذاری برنامه") },
+                        label = { Text(stringResource(R.string.as_drawer_share)) },
                         selected = false,
                         icon = { Icon(Icons.Default.Share, contentDescription = null) },
                         onClick = {
                             closeThen {
                                 val shareIntent = Intent(Intent.ACTION_SEND).apply {
                                     type = "text/plain"
-                                    putExtra(
-                                        Intent.EXTRA_TEXT,
-                                        "$APP_TITLE — مدیریت هزینه و حساب‌های شخصی، توسعه توسط AS Team",
-                                    )
+                                    putExtra(Intent.EXTRA_TEXT, shareText)
                                 }
                                 context.startActivity(
-                                    Intent.createChooser(shareIntent, "اشتراک‌گذاری $APP_TITLE")
+                                    Intent.createChooser(shareIntent, shareChooserTitle)
                                 )
                             }
                         },
                         modifier = Modifier.padding(horizontal = 12.dp),
                     )
                     NavigationDrawerItem(
-                        label = { Text("تماس با ما") },
+                        label = { Text(stringResource(R.string.as_drawer_contact)) },
                         selected = false,
                         icon = { Icon(Icons.Default.Email, contentDescription = null) },
                         onClick = {
                             closeThen {
+                                val subject = Uri.encode(appTitle)
                                 val mailIntent = Intent(
                                     Intent.ACTION_SENDTO,
-                                    Uri.parse("mailto:$SUPPORT_EMAIL?subject=$APP_TITLE"),
+                                    Uri.parse("mailto:$SUPPORT_EMAIL?subject=$subject"),
                                 )
                                 runCatching { context.startActivity(mailIntent) }
                             }
@@ -166,7 +172,7 @@ fun AsNavigationDrawer(
                         modifier = Modifier.padding(horizontal = 12.dp),
                     )
                     NavigationDrawerItem(
-                        label = { Text("درباره نرم‌افزار") },
+                        label = { Text(stringResource(R.string.as_drawer_about)) },
                         selected = false,
                         icon = { Icon(Icons.Default.Info, contentDescription = null) },
                         onClick = {
@@ -178,7 +184,7 @@ fun AsNavigationDrawer(
 
                     Spacer(Modifier.weight(1f))
                     Text(
-                        text = "Develop by AS Team Group • نسخه $versionName",
+                        text = stringResource(R.string.as_drawer_footer, versionName),
                         style = MaterialTheme.typography.labelSmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         modifier = Modifier
@@ -188,16 +194,18 @@ fun AsNavigationDrawer(
                 }
             },
         ) {
-            // The localized app content now inherits RTL instead of being forced back to LTR.
+            // This parent stays RTL so TopStart is the physical top-right corner.
             Box(modifier = Modifier.fillMaxSize()) {
-                content()
+                CompositionLocalProvider(LocalLayoutDirection provides appLayoutDirection) {
+                    content()
+                }
 
-                // Unified AS hamburger entry point: top-right on every main app screen.
+                // Unified AS hamburger entry point: fixed at the physical top-right.
                 Surface(
                     modifier = Modifier
-                        .align(Alignment.TopEnd)
+                        .align(Alignment.TopStart)
                         .statusBarsPadding()
-                        .padding(top = 8.dp, end = 8.dp),
+                        .padding(top = 8.dp, start = 8.dp),
                     shape = MaterialTheme.shapes.large,
                     tonalElevation = 4.dp,
                     shadowElevation = 2.dp,
@@ -205,7 +213,7 @@ fun AsNavigationDrawer(
                     IconButton(onClick = { scope.launch { drawerState.open() } }) {
                         Icon(
                             imageVector = Icons.Default.Menu,
-                            contentDescription = "باز کردن منوی اصلی",
+                            contentDescription = openMenuDescription,
                         )
                     }
                 }
@@ -214,22 +222,24 @@ fun AsNavigationDrawer(
     }
 
     if (showAboutDialog) {
-        CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
+        CompositionLocalProvider(LocalLayoutDirection provides appLayoutDirection) {
             AlertDialog(
                 onDismissRequest = { showAboutDialog = false },
                 confirmButton = {
                     TextButton(onClick = { showAboutDialog = false }) {
-                        Text("بستن")
+                        Text(stringResource(R.string.as_drawer_close))
                     }
                 },
                 icon = { Icon(Icons.Default.Info, contentDescription = null) },
-                title = { Text(APP_TITLE) },
+                title = { Text(appTitle) },
                 text = {
                     Text(
-                        "$APP_TITLE برای مدیریت هزینه‌ها، درآمدها، حساب‌ها و تراکنش‌های شخصی طراحی شده است.\n\n" +
-                            "Develop by AS Team Group\n" +
-                            "پشتیبانی: $SUPPORT_EMAIL\n" +
-                            "نسخه: $versionName"
+                        stringResource(
+                            R.string.as_drawer_about_body,
+                            appTitle,
+                            SUPPORT_EMAIL,
+                            versionName,
+                        )
                     )
                 },
             )
@@ -256,7 +266,7 @@ private fun DrawerHeader(versionName: String) {
             Box(contentAlignment = Alignment.Center) {
                 Icon(
                     imageVector = Icons.Default.AccountCircle,
-                    contentDescription = "پروفایل",
+                    contentDescription = stringResource(R.string.as_drawer_profile),
                     modifier = Modifier.size(60.dp),
                     tint = MaterialTheme.colorScheme.onPrimaryContainer,
                 )
@@ -264,7 +274,7 @@ private fun DrawerHeader(versionName: String) {
         }
 
         Text(
-            text = APP_TITLE,
+            text = stringResource(R.string.app_name),
             style = MaterialTheme.typography.titleLarge,
             fontWeight = FontWeight.Bold,
         )
@@ -276,7 +286,7 @@ private fun DrawerHeader(versionName: String) {
             )
         }
         Text(
-            text = "نسخه $versionName",
+            text = stringResource(R.string.as_drawer_version, versionName),
             style = MaterialTheme.typography.labelMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
         )

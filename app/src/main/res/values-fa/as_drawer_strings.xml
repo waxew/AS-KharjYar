@@ -11,6 +11,7 @@
     <string name="as_drawer_share_chooser">اشتراک‌گذاری %1$s</string>
     <string name="as_drawer_open">باز کردن منوی اصلی</string>
     <string name="as_drawer_close">بستن</string>
+    <string name="as_drawer_check_updates">بررسی بروزرسانی</string>
     <string name="as_drawer_about_body">%1$s برای مدیریت هزینه‌ها، درآمدها، حساب‌ها و تراکنش‌های شخصی طراحی شده است.\n\nDevelop by AS Team Group\nپشتیبانی: %2$s\nنسخه: %3$s</string>
     <string name="as_drawer_profile">پروفایل</string>
     <string name="as_drawer_version">نسخه %1$s</string>

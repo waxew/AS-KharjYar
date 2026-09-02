@@ -9,14 +9,16 @@ data class SettingState(
 ) {
     companion object {
         private fun initial() = listOf(
+            // AS Team settings order: keep core user controls visible first.
+            SettingItem.Backup(R.string.setting_backup),
             SettingItem.Theme(R.string.setting_theme),
             SettingItem.Language(R.string.setting_language),
-            // SettingItem.Logout(R.string.setting_logout),
         )
     }
 }
 
 sealed class SettingItem(open val title: Int) {
+    data class Backup(override val title: Int) : SettingItem(title)
     data class Theme(override val title: Int) : SettingItem(title)
     data class Logout(override val title: Int) : SettingItem(title)
     data class Language(override val title: Int) : SettingItem(title)

@@ -37,15 +37,16 @@ jobs:
       - name: Android lint
         run: ./gradlew lintRelease --stacktrace
 
-      - name: Build debug and release APKs
-        run: ./gradlew assembleDebug assembleRelease --stacktrace
+      - name: Build debug, release APK and release AAB
+        run: ./gradlew assembleDebug assembleRelease bundleRelease --stacktrace
 
-      - name: Upload APK artifacts
+      - name: Upload Android artifacts
         if: success()
         uses: actions/upload-artifact@v4
         with:
-          name: AS-KharjYar-apks
+          name: AS-KharjYar-android-artifacts
           path: |
             app/build/outputs/apk/debug/*.apk
             app/build/outputs/apk/release/*.apk
+            app/build/outputs/bundle/release/*.aab
           if-no-files-found: error

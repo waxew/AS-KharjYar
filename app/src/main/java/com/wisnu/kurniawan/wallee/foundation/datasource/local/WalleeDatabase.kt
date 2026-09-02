@@ -27,6 +27,10 @@ abstract class WalleeDatabase : RoomDatabase() {
 
     @DelicateCoroutinesApi
     companion object {
+        /**
+         * Legacy database identity retained intentionally for update compatibility.
+         * Renaming this file would make existing installs appear to have an empty database.
+         */
         private const val DB_NAME = "wallee-db"
 
         @Volatile
@@ -39,15 +43,15 @@ abstract class WalleeDatabase : RoomDatabase() {
         }
 
         private fun buildDatabase(context: Context): WalleeDatabase {
-            val db = Room.databaseBuilder(
+            // AS Team data-safety policy: never enable Room destructive migration here.
+            // When the schema version changes, add an explicit Migration(X, Y) and register it
+            // with addMigrations(...). A missing migration should fail loudly instead of deleting
+            // the user's accounts and transaction history.
+            return Room.databaseBuilder(
                 context,
                 WalleeDatabase::class.java,
-                DB_NAME
-            )
-                .fallbackToDestructiveMigration(false)
-
-            return db.build()
+                DB_NAME,
+            ).build()
         }
     }
 }
-

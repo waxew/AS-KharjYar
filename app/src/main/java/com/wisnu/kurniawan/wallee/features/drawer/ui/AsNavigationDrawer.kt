@@ -40,6 +40,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.NavigationDrawerItem
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -71,15 +72,17 @@ import kotlinx.coroutines.withContext
 private const val SUPPORT_EMAIL = "AS.Developers.Support@Gmail.Com"
 private const val PROFILE_PREFS = "as_drawer_profile"
 private const val PROFILE_URI_KEY = "profile_uri"
+private const val PROFILE_NAME_KEY = "display_name"
 private const val PROFILE_IMAGE_MAX_SIZE = 512
+private const val PROFILE_NAME_MAX_LENGTH = 40
 
 /**
  * Shared AS Team navigation drawer for KharjYar.
  *
  * Product-level navigation stays separate from the expense database flow. The drawer itself is
  * always RTL so it opens from the physical right side, while business content follows the active
- * application locale. Profile photo selection is persisted locally via a document URI and never
- * uploaded by this component.
+ * application locale. Profile photo and display name are persisted only on this device and are
+ * never uploaded by this component.
  */
 @Composable
 fun AsNavigationDrawer(
@@ -265,9 +268,11 @@ fun AsNavigationDrawer(
 @Composable
 private fun DrawerHeader(versionName: String) {
     val context = LocalContext.current
+    val defaultProfileName = stringResource(R.string.as_drawer_default_user)
     val preferences = remember {
         context.getSharedPreferences(PROFILE_PREFS, Context.MODE_PRIVATE)
     }
+
     var profileUri by remember {
         mutableStateOf(
             preferences.getString(PROFILE_URI_KEY, null)
@@ -275,6 +280,16 @@ private fun DrawerHeader(versionName: String) {
                 ?.let(Uri::parse)
         )
     }
+    var displayName by remember(defaultProfileName) {
+        mutableStateOf(
+            preferences.getString(PROFILE_NAME_KEY, null)
+                ?.trim()
+                ?.takeIf { it.isNotBlank() }
+                ?: defaultProfileName
+        )
+    }
+    var draftName by remember { mutableStateOf("") }
+    var showNameDialog by remember { mutableStateOf(false) }
 
     val profilePicker = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.OpenDocument(),
@@ -333,9 +348,18 @@ private fun DrawerHeader(versionName: String) {
         }
 
         Text(
-            text = stringResource(R.string.app_name),
+            text = displayName,
             style = MaterialTheme.typography.titleLarge,
             fontWeight = FontWeight.Bold,
+            modifier = Modifier.clickable {
+                draftName = displayName
+                showNameDialog = true
+            },
+        )
+        Text(
+            text = stringResource(R.string.as_drawer_name_hint),
+            style = MaterialTheme.typography.labelSmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
         Text(
             text = "AS Team",
@@ -346,6 +370,42 @@ private fun DrawerHeader(versionName: String) {
             text = stringResource(R.string.as_drawer_version, versionName),
             style = MaterialTheme.typography.labelMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
+        )
+    }
+
+    if (showNameDialog) {
+        AlertDialog(
+            onDismissRequest = { showNameDialog = false },
+            title = { Text(stringResource(R.string.as_drawer_edit_name)) },
+            text = {
+                OutlinedTextField(
+                    value = draftName,
+                    onValueChange = {
+                        if (it.length <= PROFILE_NAME_MAX_LENGTH) {
+                            draftName = it
+                        }
+                    },
+                    label = { Text(stringResource(R.string.as_drawer_name_label)) },
+                    singleLine = true,
+                )
+            },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        val cleanedName = draftName.trim().ifBlank { defaultProfileName }
+                        preferences.edit().putString(PROFILE_NAME_KEY, cleanedName).apply()
+                        displayName = cleanedName
+                        showNameDialog = false
+                    }
+                ) {
+                    Text(stringResource(R.string.as_drawer_save))
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showNameDialog = false }) {
+                    Text(stringResource(R.string.as_drawer_cancel))
+                }
+            },
         )
     }
 }

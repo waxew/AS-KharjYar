@@ -1,7 +1,16 @@
 <resources>
     <string name="setting_backup">Backup and restore data</string>
     <string name="backup_title">Backup and restore</string>
-    <string name="backup_export">Export backup file</string>
-    <string name="backup_import">Import backup file</string>
-    <string name="backup_warning">Restore replaces current local data. Create a backup before continuing.</string>
+    <string name="backup_scope_note">This backup contains the accounts and transaction history stored in KharjYar's local financial database.</string>
+    <string name="backup_export">Export financial data backup</string>
+    <string name="backup_import">Restore financial data backup</string>
+    <string name="backup_warning">Restoring a backup replaces the financial data currently stored on this device.</string>
+    <string name="backup_export_success">Backup saved successfully.</string>
+    <string name="backup_export_failed">Could not save the backup file.</string>
+    <string name="backup_restore_failed">This backup is invalid, damaged, or incompatible with this version of KharjYar.</string>
+    <string name="backup_restore_confirm_title">Replace current financial data?</string>
+    <string name="backup_restore_confirm_message">Accounts and transactions currently stored on this device will be replaced by the selected backup. KharjYar will restart after a successful restore.</string>
+    <string name="backup_restore_confirm">Restore</string>
+    <string name="backup_cancel">Cancel</string>
+    <string name="backup_busy">Processing backup…</string>
 </resources>

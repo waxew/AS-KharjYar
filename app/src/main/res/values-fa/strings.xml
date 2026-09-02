@@ -53,6 +53,7 @@
     <string name="setting_title">منوی اصلی</string>
     <string name="setting_theme">پوسته</string>
     <string name="setting_theme_automatic">خودکار</string>
+    <string name="setting_theme_wallpaper">پس‌زمینه سیستم</string>
     <string name="setting_theme_light">روشن</string>
     <string name="setting_theme_twilight">گرگ‌ومیش</string>
     <string name="setting_theme_night">تیره</string>
@@ -85,6 +86,7 @@
     <string name="transaction_edit_note_income_hint">مثال: «برای پس‌انداز»</string>
     <string name="transaction_edit_note_transfer_hint">مثال: «برای اشتراک این ماه»</string>
     <string name="transaction_summary">خلاصه</string>
+    <string name="transaction_cash_flow">جریان نقدی</string>
     <string name="transaction_this_month">این ماه</string>
     <string name="transaction_last">آخرین تراکنش‌ها</string>
     <string name="transaction_last_no_data_title">اولین تراکنش را ثبت کنید</string>

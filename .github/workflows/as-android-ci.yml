@@ -35,7 +35,30 @@ jobs:
         run: ./gradlew testDebugUnitTest --stacktrace
 
       - name: Android lint
+        id: lint
+        continue-on-error: true
         run: ./gradlew lintRelease --stacktrace
+
+      - name: Print lint report
+        if: always()
+        shell: bash
+        run: |
+          REPORT="app/build/intermediates/lint_intermediate_text_report/release/lintReportRelease/lint-results-release.txt"
+          if [ -f "$REPORT" ]; then
+            cat "$REPORT"
+          fi
+
+      - name: Upload lint report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: AS-KharjYar-lint-report
+          path: app/build/reports/lint-results-release.*
+          if-no-files-found: ignore
+
+      - name: Enforce lint quality gate
+        if: steps.lint.outcome != 'success'
+        run: exit 1
 
       - name: Build debug, release APK and release AAB
         run: ./gradlew assembleDebug assembleRelease bundleRelease --stacktrace

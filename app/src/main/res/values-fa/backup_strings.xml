@@ -1,7 +1,16 @@
 <resources>
     <string name="setting_backup">پشتیبان‌گیری و بازیابی اطلاعات</string>
     <string name="backup_title">پشتیبان‌گیری و بازیابی</string>
-    <string name="backup_export">خروجی فایل پشتیبان</string>
-    <string name="backup_import">وارد کردن فایل پشتیبان</string>
-    <string name="backup_warning">بازیابی، اطلاعات فعلی برنامه را جایگزین می‌کند. قبل از ادامه یک نسخه پشتیبان تهیه کنید.</string>
+    <string name="backup_scope_note">این نسخه پشتیبان شامل حساب‌ها و تاریخچه تراکنش‌های ذخیره‌شده در دیتابیس مالی محلی خرج‌یار است.</string>
+    <string name="backup_export">ذخیره نسخه پشتیبان اطلاعات مالی</string>
+    <string name="backup_import">بازیابی نسخه پشتیبان اطلاعات مالی</string>
+    <string name="backup_warning">بازیابی نسخه پشتیبان، اطلاعات مالی فعلی ذخیره‌شده روی این دستگاه را جایگزین می‌کند.</string>
+    <string name="backup_export_success">نسخه پشتیبان با موفقیت ذخیره شد.</string>
+    <string name="backup_export_failed">ذخیره فایل پشتیبان انجام نشد.</string>
+    <string name="backup_restore_failed">این فایل پشتیبان نامعتبر، خراب یا با این نسخه خرج‌یار ناسازگار است.</string>
+    <string name="backup_restore_confirm_title">اطلاعات مالی فعلی جایگزین شود؟</string>
+    <string name="backup_restore_confirm_message">حساب‌ها و تراکنش‌های فعلی دستگاه با نسخه پشتیبان انتخاب‌شده جایگزین می‌شوند. پس از بازیابی موفق، خرج‌یار دوباره راه‌اندازی می‌شود.</string>
+    <string name="backup_restore_confirm">بازیابی</string>
+    <string name="backup_cancel">انصراف</string>
+    <string name="backup_busy">در حال پردازش نسخه پشتیبان…</string>
 </resources>

@@ -9,6 +9,7 @@ import android.os.SystemClock
 import com.wisnu.kurniawan.wallee.foundation.datasource.local.WalleeDatabase
 import java.io.File
 import java.io.FileOutputStream
+import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -18,6 +19,7 @@ import kotlinx.coroutines.withContext
  * Public storage access is delegated to Android's Storage Access Framework. Financial data never
  * leaves the device unless the user explicitly selects a destination document.
  */
+@OptIn(DelicateCoroutinesApi::class)
 class BackupManager(
     private val context: Context,
 ) {

@@ -207,9 +207,6 @@ dependencies {
     implementation libs.androidx.dataStore.core
     implementation libs.google.protobuf
 
-    // Server
-    implementation libs.bundles.networking
-
 
     ///////////////
     // CORE

@@ -53,7 +53,8 @@ class PreferenceManager @Inject constructor(
 
     fun getLanguage(): Flow<Language> {
         return languageDataStore.data.map { it.toLanguage() }
-            .catch { emit(Language.ENGLISH) }
+            // The localized AS Team build must recover to Persian if DataStore cannot be read.
+            .catch { emit(Language.PERSIAN) }
             .flowOn(dispatcher)
     }
 

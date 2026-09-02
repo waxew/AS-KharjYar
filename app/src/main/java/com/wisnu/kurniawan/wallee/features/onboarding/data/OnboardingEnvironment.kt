@@ -1,9 +1,6 @@
 package com.wisnu.kurniawan.wallee.features.onboarding.data
 
 import android.content.Context
-import com.google.firebase.Firebase
-import com.google.firebase.crashlytics.crashlytics
-import com.google.firebase.crashlytics.setCustomKeys
 import com.wisnu.kurniawan.wallee.foundation.datasource.local.LocalManager
 import com.wisnu.kurniawan.wallee.foundation.datasource.preference.PreferenceManager
 import com.wisnu.kurniawan.wallee.foundation.extension.defaultAccount
@@ -27,17 +24,10 @@ class OnboardingEnvironment @Inject constructor(
     }
 
     override suspend fun saveAccount(currency: Currency) {
+        // AS Team privacy policy: onboarding data remains local. Creating the first account must
+        // not send the selected country or currency to third-party analytics/crash services.
         val account = defaultAccount(currency, dateTimeProvider.now())
-
         localManager.insertAccount(account)
-        setCustomPropertiesCrashlytics(currency)
         preferenceManager.setFinishOnboarding(true)
-    }
-
-    private fun setCustomPropertiesCrashlytics(currency: Currency) {
-        Firebase.crashlytics.setCustomKeys {
-            key("currency_code", currency.currencyCode)
-            key("country_code", currency.countryCode)
-        }
     }
 }

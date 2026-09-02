@@ -1,8 +1,6 @@
 # AS-KharjYar | خرج‌یار
 
-[![AS Android CI](https://github.com/waxew/AS-KharjYar/actions/workflows/as-android-ci.yml/badge.svg)](https://github.com/waxew/AS-KharjYar/actions/workflows/as-android-ci.yml)
-
-«خرج‌یار» نسخه شخصی‌سازی‌شده AS Team برای مدیریت هزینه‌ها، درآمدها، حساب‌ها و تراکنش‌های شخصی است. رابط اصلی برنامه با Jetpack Compose پیاده‌سازی شده و داده‌های مالی در لایه محلی برنامه نگهداری می‌شوند.
+«خرج‌یار» نسخه شخصی‌سازی‌شده AS Team برای مدیریت هزینه‌ها، درآمدها، حساب‌ها و تراکنش‌های شخصی است. رابط برنامه با Jetpack Compose پیاده‌سازی شده و معماری نسخه AS تا حد ممکن Local-First نگه داشته می‌شود.
 
 ## هویت پروژه
 
@@ -14,47 +12,77 @@
 - Minimum SDK: 21
 - Target SDK: 35
 - Java: 17
+- Gradle root project: `AS-KharjYar`
 
-## تغییرات AS Team
+> نام package سورس و بعضی نام‌های داخلی legacy هنوز `Wallee` هستند. این موارد عمداً به‌صورت مرحله‌ای مهاجرت می‌شوند تا هویت دیتابیس و داده‌های نصب‌های موجود با یک rename ساده آسیب نبینند.
 
-- تغییر نام محصول به «خرج‌یار» و Application ID به `com.asteam.kharjyar`
-- افزودن زبان فارسی و شروع نصب جدید با locale فارسی
-- پشتیبانی RTL برای رابط فارسی
-- افزودن منوی همبرگری سمت راست مطابق الگوی مشترک AS Team
-- نمایش نسخه، درباره نرم‌افزار، تماس با پشتیبانی و اشتراک‌گذاری از Drawer
-- حذف اتصال Firebase Analytics و Crash Reporting پروژه upstream از نسخه AS
-- محلی نگه‌داشتن تحلیل تراکنش‌ها
-- جداکردن اطلاعات signing از Git و نگهداری آن در local/CI secrets
-- افزودن GitHub Actions برای ساخت Debug APK روی هر push و pull request
+## قابلیت‌ها و تغییرات AS Team
+
+- نام و هویت نصب اختصاصی «خرج‌یار» با `com.asteam.kharjyar`
+- فارسی‌سازی گسترده رابط و پشتیبانی RTL
+- فارسی به‌عنوان زبان شروع نصب جدید، با امکان انتخاب زبان از داخل برنامه
+- تشخیص امن کشور دستگاه و پیشنهاد واحد پول مناسب
+- نمایش نام کشورها بر اساس زبان فعال برنامه
+- فرمت فارسی برای واحد پول ایران
+- مدیریت هزینه، درآمد، حساب و تراکنش روی دیتابیس داخلی Room
+- Drawer سمت راست مطابق استاندارد مشترک AS Team
+- ترتیب استاندارد Drawer: «تنظیمات» در index 0 و «اشتراک‌گذاری» در index 1
+- عکس پروفایل دایره‌ای با انتخاب از فایل/گالری و نگهداری محلی URI
+- نام نمایشی قابل ویرایش و ذخیره محلی
+- خانه، پوسته و ظاهر، تماس با ما، درباره نرم‌افزار و نمایش نسخه
+- دکمه بررسی بروزرسانی از بخش About و هدایت به Releases رسمی همین مخزن
+- Back هنگام بازبودن Drawer ابتدا منو را می‌بندد
+- حذف Firebase Analytics و Firebase Crashlytics از نسخه AS
+- حذف dependencyهای شبکه بلااستفاده از مسیر اصلی برنامه
+- عدم ارسال انتخاب کشور/ارز و اطلاعات onboarding به سرویس‌های Analytics/Crash Reporting
+- نگهداری اطلاعات signing خارج از Git و فقط در Local/CI secrets
+
+## حفظ داده و آپدیت‌خور بودن
+
+`applicationId` عمومی باید روی `com.asteam.kharjyar` ثابت بماند و `versionCode` در هر Release افزایش پیدا کند.
+
+Room در نسخه AS اجازه migration مخرب خودکار ندارد. `fallbackToDestructiveMigration` از مسیر دیتابیس حذف شده است؛ بنابراین هر تغییر Schema باید Migration صریح داشته باشد. نام legacy دیتابیس `wallee-db` نیز برای سازگاری نصب‌های قبلی عمداً حفظ می‌شود.
+
+نام فایل‌های DataStore نیز هویت پایدار داده هستند و صرفاً برای برندینگ rename نمی‌شوند.
+
+راهنمای کامل این سیاست:
+
+- [`doc/UPDATE_AND_DATA_MIGRATION.md`](doc/UPDATE_AND_DATA_MIGRATION.md)
+
+## حریم خصوصی
+
+سیاست فعلی پروژه در فایل زیر ثبت شده است:
+
+- [`doc/privacy-policy.md`](doc/privacy-policy.md)
+
+نسخه فعلی AS-KharjYar از Firebase Analytics و Firebase Crashlytics استفاده نمی‌کند. در صورت اضافه‌شدن هر قابلیت آنلاین، Backup ابری، تبلیغات یا همگام‌سازی، رفتار واقعی برنامه و Privacy Policy باید هم‌زمان به‌روزرسانی شوند.
 
 ## فناوری‌ها
 
 - Kotlin
-- Jetpack Compose
+- Jetpack Compose / Material 3
 - Coroutines و Flow
 - Room
-- DataStore
+- DataStore / Protocol Buffers
 - Navigation Compose
 - Hilt
-- Material 3
+- AndroidX App Locales
 
 ## ساخت پروژه
+
+فرمان ساخت Debug:
 
 ```bash
 ./gradlew assembleDebug
 ```
 
-برای تست واحد:
+فرمان تست واحد:
 
 ```bash
 ./gradlew testDebug
 ```
 
-اطلاعات signing نسخه Release نباید داخل Git قرار بگیرد. فایل `keystore.properties` فقط باید به‌صورت local یا از طریق CI secrets تأمین شود.
-
-## ساختار توسعه AS
-
-تغییرات برندینگ، فارسی‌سازی و قابلیت‌های اختصاصی AS Team روی همین مخزن ادامه پیدا می‌کنند. هنگام تغییر مدل‌های Room/DataStore باید Migration سازگار نوشته شود تا نسخه‌های بعدی بتوانند روی نسخه قبلی نصب شوند و اطلاعات کاربر حفظ شود.
+اطلاعات signing نسخه Release نباید داخل Git قرار بگیرد. فایل `keystore.properties` فقط باید به‌صورت local یا از طریق CI secret تأمین شود.
 
 ## منبع و مجوز
 

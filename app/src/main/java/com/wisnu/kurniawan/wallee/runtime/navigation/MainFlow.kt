@@ -93,6 +93,11 @@ sealed class SettingFlow(val name: String) {
         val route = name
     }
 
+    /** Local, user-controlled database backup and restore. */
+    object Backup : SettingFlow("backup-screen") {
+        val route = name
+    }
+
     object Theme : SettingFlow("theme-screen") {
         val route = name
     }

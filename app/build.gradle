@@ -4,9 +4,6 @@ plugins {
     id 'kotlin-android'
     id 'com.google.devtools.ksp'
     id 'dagger.hilt.android.plugin'
-    id 'com.google.gms.google-services'
-    id 'com.google.firebase.crashlytics'
-    id 'com.google.firebase.firebase-perf'
     id 'kotlin-parcelize'
     id 'androidx.room'
     id 'com.google.protobuf'
@@ -14,6 +11,14 @@ plugins {
 }
 
 apply from: "$rootDir/gradle/test-report.gradle"
+
+// AS Team signing policy: release credentials are local/CI secrets and are never stored in Git.
+def releaseKeystorePropertiesFile = rootProject.file('keystore.properties')
+def releaseKeystoreProperties = new Properties()
+def hasReleaseSigning = releaseKeystorePropertiesFile.exists()
+if (hasReleaseSigning) {
+    releaseKeystoreProperties.load(releaseKeystorePropertiesFile.newDataInputStream())
+}
 
 ext.codeCoverage = [
         enabled      : true,
@@ -56,14 +61,13 @@ android {
     }
 
     signingConfigs {
-        release {
-            Properties properties = new Properties()
-            properties.load(project.rootProject.file('keystore.properties').newDataInputStream())
-
-            storeFile file("${properties.getProperty('RELEASE_STORE_FILE')}")
-            storePassword "${properties.getProperty('RELEASE_STORE_PASSWORD')}"
-            keyAlias "${properties.getProperty('RELEASE_KEY_ALIAS')}"
-            keyPassword "${properties.getProperty('RELEASE_KEY_PASSWORD')}"
+        if (hasReleaseSigning) {
+            release {
+                storeFile file("${releaseKeystoreProperties.getProperty('RELEASE_STORE_FILE')}")
+                storePassword "${releaseKeystoreProperties.getProperty('RELEASE_STORE_PASSWORD')}"
+                keyAlias "${releaseKeystoreProperties.getProperty('RELEASE_KEY_ALIAS')}"
+                keyPassword "${releaseKeystoreProperties.getProperty('RELEASE_KEY_PASSWORD')}"
+            }
         }
     }
 
@@ -88,7 +92,9 @@ android {
             minifyEnabled true
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            signingConfig signingConfigs.release
+            if (hasReleaseSigning) {
+                signingConfig signingConfigs.release
+            }
         }
         benchmark {
             initWith buildTypes.release
@@ -220,26 +226,9 @@ dependencies {
     coreLibraryDesugaring(libs.android.desugarJdkLibs)
     implementation libs.wisnu.foundation.core.datetime
 
-    // Logger
+    // Logger. Upstream Firebase crash reporting is intentionally removed from the AS build.
     implementation libs.wisnu.foundation.core.loggr
     implementation libs.wisnu.foundation.lib.lifecycleloggr
-
-    // Analytics
-    implementation platform(libs.google.firebase)
-    implementation 'com.google.firebase:firebase-analytics'
-    implementation('com.google.firebase:firebase-perf') {
-        /*
-        Exclusion of protobuf / protolite dependencies is necessary as the
-        datastore-proto brings in protobuf dependencies. These are the source of truth
-        for Now in Android.
-        That's why the duplicate classes from below dependencies are excluded.
-        */
-        exclude group: "com.google.protobuf", module: "protobuf-javalite"
-        exclude group: "com.google.firebase", module: "protolite-well-known-types"
-    }
-    implementation 'com.google.firebase:firebase-crashlytics'
-    implementation libs.wisnu.foundation.core.analytics
-    implementation libs.wisnu.foundation.lib.analyticsmanager
 
     ///////////////
     // DEBUGGING SUPPORT

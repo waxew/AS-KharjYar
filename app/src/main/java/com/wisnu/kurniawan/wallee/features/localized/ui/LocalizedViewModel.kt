@@ -42,7 +42,16 @@ class LocalizedViewModel @Inject constructor(localizedSettingEnvironment: ILocal
         }
     }
 
+    /**
+     * Persian is intentionally listed first because it is the primary language
+     * of the AS Team KharjYar product. Upstream languages remain available.
+     */
     private fun initial() = listOf(
+        LanguageItem(
+            title = R.string.setting_language_persian,
+            language = Language.PERSIAN,
+            applied = false
+        ),
         LanguageItem(
             title = R.string.setting_language_english,
             language = Language.ENGLISH,

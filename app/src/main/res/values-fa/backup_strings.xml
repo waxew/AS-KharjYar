@@ -1,0 +1,7 @@
+<resources>
+    <string name="setting_backup">پشتیبان‌گیری و بازیابی اطلاعات</string>
+    <string name="backup_title">پشتیبان‌گیری و بازیابی</string>
+    <string name="backup_export">خروجی فایل پشتیبان</string>
+    <string name="backup_import">وارد کردن فایل پشتیبان</string>
+    <string name="backup_warning">بازیابی، اطلاعات فعلی برنامه را جایگزین می‌کند. قبل از ادامه یک نسخه پشتیبان تهیه کنید.</string>
+</resources>

@@ -11,6 +11,13 @@ import com.wisnu.kurniawan.wallee.foundation.datasource.local.model.TransactionD
 import com.wisnu.kurniawan.wallee.foundation.datasource.local.model.TransactionRecordDb
 import kotlinx.coroutines.DelicateCoroutinesApi
 
+/**
+ * Legacy on-device database file name. Do not rename without a file-level migration because
+ * existing installs already store their financial history under this name.
+ */
+const val KHARJYAR_DATABASE_NAME = "wallee-db"
+const val KHARJYAR_DATABASE_VERSION = 1
+
 @Database(
     entities = [
         AccountDb::class,
@@ -18,7 +25,7 @@ import kotlinx.coroutines.DelicateCoroutinesApi
         AccountRecordDb::class,
         TransactionRecordDb::class,
     ],
-    version = 1,
+    version = KHARJYAR_DATABASE_VERSION,
 )
 @TypeConverters(DateConverter::class)
 abstract class WalleeDatabase : RoomDatabase() {
@@ -27,18 +34,23 @@ abstract class WalleeDatabase : RoomDatabase() {
 
     @DelicateCoroutinesApi
     companion object {
-        /**
-         * Legacy database identity retained intentionally for update compatibility.
-         * Renaming this file would make existing installs appear to have an empty database.
-         */
-        private const val DB_NAME = "wallee-db"
-
         @Volatile
         private var INSTANCE: WalleeDatabase? = null
 
         fun getInstance(context: Context): WalleeDatabase {
             return INSTANCE ?: synchronized(this) {
-                INSTANCE ?: buildDatabase(context).also { INSTANCE = it }
+                INSTANCE ?: buildDatabase(context.applicationContext).also { INSTANCE = it }
+            }
+        }
+
+        /**
+         * Closes the singleton before a database-file restore. Callers must restart the process
+         * immediately after restoring because already injected DAO instances reference the old DB.
+         */
+        fun closeInstanceForRestore() {
+            synchronized(this) {
+                INSTANCE?.close()
+                INSTANCE = null
             }
         }
 
@@ -50,7 +62,7 @@ abstract class WalleeDatabase : RoomDatabase() {
             return Room.databaseBuilder(
                 context,
                 WalleeDatabase::class.java,
-                DB_NAME,
+                KHARJYAR_DATABASE_NAME,
             ).build()
         }
     }

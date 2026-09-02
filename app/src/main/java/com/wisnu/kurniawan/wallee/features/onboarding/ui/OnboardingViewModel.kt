@@ -8,6 +8,7 @@ import com.wisnu.kurniawan.wallee.foundation.currency.CURRENCY_DATA
 import com.wisnu.kurniawan.wallee.foundation.emoji.EmojiData
 import com.wisnu.kurniawan.wallee.model.Currency
 import dagger.hilt.android.lifecycle.HiltViewModel
+import java.util.Locale
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -64,20 +65,30 @@ class OnboardingViewModel @Inject constructor(
     }
 
     private fun initialCurrencyItems(): List<CurrencyItem> {
+        val displayLocale = Locale.getDefault()
+
         return CURRENCY_DATA.flatMap { (key, value) ->
-            value.countryCodes.map {
-                val countryName = COUNTRY_DATA[it]?.name.orEmpty()
-                val flagKey = countryName.lowercase().replace(" ", "_")
+            value.countryCodes.map { countryCode ->
+                val country = COUNTRY_DATA[countryCode]
+                val fallbackCountryName = country?.name.orEmpty()
+                val localizedCountryName = Locale("", countryCode)
+                    .getDisplayCountry(displayLocale)
+                    .takeIf { it.isNotBlank() }
+                    ?: fallbackCountryName
+
+                // EmojiData keys are based on the inherited English country names, so keep the
+                // canonical source name for flag lookup while showing localized names to users.
+                val flagKey = fallbackCountryName.lowercase(Locale.US).replace(" ", "_")
                 val flag = EmojiData.DATA[flagKey] ?: "🏳️"
 
                 CurrencyItem(
                     currencySymbol = value.symbol,
                     flag = flag,
-                    countryName = countryName,
-                    countryCode = it,
+                    countryName = localizedCountryName,
+                    countryCode = countryCode,
                     currency = Currency(
                         key,
-                        it
+                        countryCode
                     )
                 )
             }

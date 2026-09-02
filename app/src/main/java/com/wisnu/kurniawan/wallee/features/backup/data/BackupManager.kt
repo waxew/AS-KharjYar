@@ -39,6 +39,7 @@ class BackupManager(
                     stream.flush()
                 }
             }
+            Unit
         }
     }
 
@@ -126,6 +127,7 @@ class BackupManager(
                 }
                 throw error
             }
+            Unit
         }
     }
 

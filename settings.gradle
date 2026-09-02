@@ -13,7 +13,7 @@ dependencyResolutionManagement {
         maven { url 'https://jitpack.io' }
     }
 }
-rootProject.name = "Wallee"
+rootProject.name = "AS-KharjYar"
 
 ///////////////
 // PRODUCT MODULE

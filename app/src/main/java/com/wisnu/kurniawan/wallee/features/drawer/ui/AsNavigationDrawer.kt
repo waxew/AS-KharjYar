@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.weight
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
@@ -215,24 +216,26 @@ fun AsNavigationDrawer(
     }
 
     if (showAboutDialog) {
-        AlertDialog(
-            onDismissRequest = { showAboutDialog = false },
-            confirmButton = {
-                TextButton(onClick = { showAboutDialog = false }) {
-                    Text("بستن")
-                }
-            },
-            icon = { Icon(Icons.Default.Info, contentDescription = null) },
-            title = { Text(APP_TITLE) },
-            text = {
-                Text(
-                    "$APP_TITLE برای مدیریت هزینه‌ها، درآمدها، حساب‌ها و تراکنش‌های شخصی طراحی شده است.\n\n" +
-                        "Develop by AS Team Group\n" +
-                        "پشتیبانی: $SUPPORT_EMAIL\n" +
-                        "نسخه: $versionName"
-                )
-            },
-        )
+        CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
+            AlertDialog(
+                onDismissRequest = { showAboutDialog = false },
+                confirmButton = {
+                    TextButton(onClick = { showAboutDialog = false }) {
+                        Text("بستن")
+                    }
+                },
+                icon = { Icon(Icons.Default.Info, contentDescription = null) },
+                title = { Text(APP_TITLE) },
+                text = {
+                    Text(
+                        "$APP_TITLE برای مدیریت هزینه‌ها، درآمدها، حساب‌ها و تراکنش‌های شخصی طراحی شده است.\n\n" +
+                            "Develop by AS Team Group\n" +
+                            "پشتیبانی: $SUPPORT_EMAIL\n" +
+                            "نسخه: $versionName"
+                    )
+                },
+            )
+        }
     }
 }
 

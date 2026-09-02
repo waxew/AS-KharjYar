@@ -3,10 +3,13 @@ package com.wisnu.kurniawan.wallee.runtime
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.material3.Surface
+import androidx.core.os.LocaleListCompat
 import androidx.core.view.WindowCompat
 import com.wisnu.kurniawan.wallee.R
 import com.wisnu.kurniawan.wallee.features.host.ui.Host
+import com.wisnu.kurniawan.wallee.foundation.localization.LanguageCode
 import com.wisnu.kurniawan.wallee.foundation.window.WindowState
 import com.wisnu.kurniawan.wallee.foundation.window.rememberWindowState
 import com.wisnu.kurniawan.wallee.runtime.navigation.MainNavHost
@@ -20,6 +23,7 @@ class MainActivity : AppCompatActivity() {
         setTheme(R.style.Theme_Wallee_Light)
         super.onCreate(savedInstanceState)
 
+        ensureDefaultLanguage()
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
         setContent {
@@ -30,6 +34,17 @@ class MainActivity : AppCompatActivity() {
                     MainNavHost(windowState)
                 }
             }
+        }
+    }
+
+    /**
+     * A fresh KharjYar installation starts in Persian. AppCompat persists any
+     * later language selected by the user, so an existing preference is never overwritten.
+     */
+    private fun ensureDefaultLanguage() {
+        if (AppCompatDelegate.getApplicationLocales().isEmpty) {
+            val persianLocales = LocaleListCompat.forLanguageTags(LanguageCode.PERSIAN)
+            AppCompatDelegate.setApplicationLocales(persianLocales)
         }
     }
 }

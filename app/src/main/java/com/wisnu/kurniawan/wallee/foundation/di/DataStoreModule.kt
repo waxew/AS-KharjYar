@@ -20,6 +20,16 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
+/*
+ * AS Team update-compatibility contract:
+ *
+ * These filenames are persisted identities, not branding strings. Do not rename them merely to
+ * replace the inherited Wallee naming. Existing installations already store user preferences at
+ * these paths, and changing a filename would make the corresponding settings appear reset.
+ *
+ * The generated Proto message schemas have the same compatibility requirement: field numbers must
+ * never be reused for a different meaning. Removed fields should be reserved in their .proto file.
+ */
 private const val CREDENTIAL_NAME = "credential-preference.pb"
 private const val USER_NAME = "user-preference.pb"
 private const val THEME_NAME = "theme-preference.pb"

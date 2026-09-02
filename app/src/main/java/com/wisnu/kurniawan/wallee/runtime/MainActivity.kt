@@ -42,7 +42,7 @@ class MainActivity : AppCompatActivity() {
      * later language selected by the user, so an existing preference is never overwritten.
      */
     private fun ensureDefaultLanguage() {
-        if (AppCompatDelegate.getApplicationLocales().isEmpty) {
+        if (AppCompatDelegate.getApplicationLocales().isEmpty()) {
             val persianLocales = LocaleListCompat.forLanguageTags(LanguageCode.PERSIAN)
             AppCompatDelegate.setApplicationLocales(persianLocales)
         }

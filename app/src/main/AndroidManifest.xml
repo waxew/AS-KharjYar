@@ -9,10 +9,11 @@
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
         android:label="${APP_NAME}"
+        android:localeConfig="@xml/locales_config"
         android:roundIcon="@mipmap/ic_launcher"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppSplash"
-        tools:targetApi="32">
+        tools:targetApi="33">
 
         <profileable
             android:shell="true"
@@ -33,9 +34,10 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
+                <!-- AS Team product deep link. Keep this synchronized with BASE_DEEPLINK. -->
                 <data
-                    android:host="com.wisnu.kurniawan"
-                    android:scheme="wallee" />
+                    android:host="com.asteam"
+                    android:scheme="kharjyar" />
             </intent-filter>
         </activity>
 

@@ -15,7 +15,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  android-build:
+  android-quality-build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -30,6 +30,12 @@ jobs:
 
       - name: Make Gradle wrapper executable
         run: chmod +x gradlew
+
+      - name: Unit tests
+        run: ./gradlew testDebugUnitTest --stacktrace
+
+      - name: Android lint
+        run: ./gradlew lintRelease --stacktrace
 
       - name: Build debug and release APKs
         run: ./gradlew assembleDebug assembleRelease --stacktrace

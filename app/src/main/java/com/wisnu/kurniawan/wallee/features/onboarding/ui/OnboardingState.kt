@@ -23,7 +23,7 @@ data class CurrencyItem(
 
 // Derived state
 @Composable
-fun OnboardingState.rememberGroupedCurrencyItems() = remember(currencyItems) {
+fun OnboardingState.rememberGroupedCurrencyItems() = remember(currencyItems, currentCountryCode) {
     derivedStateOf {
         val defaultCurrency = currencyItems.find { it.countryCode == currentCountryCode }
         if (defaultCurrency != null) {

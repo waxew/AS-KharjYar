@@ -21,7 +21,9 @@ import com.wisnu.kurniawan.wallee.runtime.navigation.home.HomeNavHost
 import com.wisnu.kurniawan.wallee.runtime.navigation.home.LargeHomeNavHost
 
 const val MinLargeScreenWidth = 585
-const val BASE_DEEPLINK = "wallee://com.wisnu.kurniawan"
+
+// AS Team deep links use the KharjYar product identity instead of the upstream Wallee scheme.
+const val BASE_DEEPLINK = "kharjyar://com.asteam"
 
 @Composable
 fun MainNavHost(windowState: WindowState) {

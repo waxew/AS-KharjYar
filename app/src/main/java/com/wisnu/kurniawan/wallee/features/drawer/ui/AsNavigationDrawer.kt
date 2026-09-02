@@ -1,12 +1,17 @@
 package com.wisnu.kurniawan.wallee.features.drawer.ui
 
+import android.content.Context
 import android.content.Intent
+import android.graphics.BitmapFactory
 import android.net.Uri
 import androidx.activity.compose.BackHandler
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
@@ -43,11 +48,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.stringResource
@@ -55,17 +64,22 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import com.wisnu.kurniawan.wallee.R
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 private const val SUPPORT_EMAIL = "AS.Developers.Support@Gmail.Com"
+private const val PROFILE_PREFS = "as_drawer_profile"
+private const val PROFILE_URI_KEY = "profile_uri"
+private const val PROFILE_IMAGE_MAX_SIZE = 512
 
 /**
  * Shared AS Team navigation drawer for KharjYar.
  *
- * The drawer deliberately owns only product-level actions. Business navigation stays in the
- * existing app NavHost so importing this component cannot corrupt the expense database flow.
- * The drawer itself is forced to RTL so Material opens it from the physical right side, while
- * the business content restores the language-specific direction captured from the app locale.
+ * Product-level navigation stays separate from the expense database flow. The drawer itself is
+ * always RTL so it opens from the physical right side, while business content follows the active
+ * application locale. Profile photo selection is persisted locally via a document URI and never
+ * uploaded by this component.
  */
 @Composable
 fun AsNavigationDrawer(
@@ -117,25 +131,12 @@ fun AsNavigationDrawer(
                     HorizontalDivider(modifier = Modifier.padding(horizontal = 16.dp))
                     Spacer(Modifier.height(8.dp))
 
-                    NavigationDrawerItem(
-                        label = { Text(stringResource(R.string.as_drawer_home)) },
-                        selected = false,
-                        icon = { Icon(Icons.Default.Home, contentDescription = null) },
-                        onClick = { closeThen(onHome) },
-                        modifier = Modifier.padding(horizontal = 12.dp),
-                    )
+                    // AS Team global drawer contract: Settings = index 0, Share = index 1.
                     NavigationDrawerItem(
                         label = { Text(stringResource(R.string.as_drawer_settings)) },
                         selected = false,
                         icon = { Icon(Icons.Default.Settings, contentDescription = null) },
                         onClick = { closeThen(onSettings) },
-                        modifier = Modifier.padding(horizontal = 12.dp),
-                    )
-                    NavigationDrawerItem(
-                        label = { Text(stringResource(R.string.as_drawer_theme)) },
-                        selected = false,
-                        icon = { Icon(Icons.Default.DarkMode, contentDescription = null) },
-                        onClick = { closeThen(onTheme) },
                         modifier = Modifier.padding(horizontal = 12.dp),
                     )
                     NavigationDrawerItem(
@@ -153,6 +154,20 @@ fun AsNavigationDrawer(
                                 )
                             }
                         },
+                        modifier = Modifier.padding(horizontal = 12.dp),
+                    )
+                    NavigationDrawerItem(
+                        label = { Text(stringResource(R.string.as_drawer_home)) },
+                        selected = false,
+                        icon = { Icon(Icons.Default.Home, contentDescription = null) },
+                        onClick = { closeThen(onHome) },
+                        modifier = Modifier.padding(horizontal = 12.dp),
+                    )
+                    NavigationDrawerItem(
+                        label = { Text(stringResource(R.string.as_drawer_theme)) },
+                        selected = false,
+                        icon = { Icon(Icons.Default.DarkMode, contentDescription = null) },
+                        onClick = { closeThen(onTheme) },
                         modifier = Modifier.padding(horizontal = 12.dp),
                     )
                     NavigationDrawerItem(
@@ -249,6 +264,39 @@ fun AsNavigationDrawer(
 
 @Composable
 private fun DrawerHeader(versionName: String) {
+    val context = LocalContext.current
+    val preferences = remember {
+        context.getSharedPreferences(PROFILE_PREFS, Context.MODE_PRIVATE)
+    }
+    var profileUri by remember {
+        mutableStateOf(
+            preferences.getString(PROFILE_URI_KEY, null)
+                ?.takeIf { it.isNotBlank() }
+                ?.let(Uri::parse)
+        )
+    }
+
+    val profilePicker = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.OpenDocument(),
+    ) { uri ->
+        if (uri != null) {
+            runCatching {
+                context.contentResolver.takePersistableUriPermission(
+                    uri,
+                    Intent.FLAG_GRANT_READ_URI_PERMISSION,
+                )
+            }
+            preferences.edit().putString(PROFILE_URI_KEY, uri.toString()).apply()
+            profileUri = uri
+        }
+    }
+
+    val profileBitmap by produceState<ImageBitmap?>(initialValue = null, key1 = profileUri) {
+        value = withContext(Dispatchers.IO) {
+            profileUri?.let { loadProfileImage(context, it) }
+        }
+    }
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -257,19 +305,30 @@ private fun DrawerHeader(versionName: String) {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
-        // Circular profile/brand placeholder. Persistent user photo support is added in the profile phase.
         Surface(
-            modifier = Modifier.size(80.dp),
+            modifier = Modifier
+                .size(80.dp)
+                .clickable { profilePicker.launch(arrayOf("image/*")) },
             shape = androidx.compose.foundation.shape.CircleShape,
             color = MaterialTheme.colorScheme.primaryContainer,
         ) {
             Box(contentAlignment = Alignment.Center) {
-                Icon(
-                    imageVector = Icons.Default.AccountCircle,
-                    contentDescription = stringResource(R.string.as_drawer_profile),
-                    modifier = Modifier.size(60.dp),
-                    tint = MaterialTheme.colorScheme.onPrimaryContainer,
-                )
+                val bitmap = profileBitmap
+                if (bitmap != null) {
+                    Image(
+                        bitmap = bitmap,
+                        contentDescription = stringResource(R.string.as_drawer_profile),
+                        modifier = Modifier.fillMaxSize(),
+                        contentScale = ContentScale.Crop,
+                    )
+                } else {
+                    Icon(
+                        imageVector = Icons.Default.AccountCircle,
+                        contentDescription = stringResource(R.string.as_drawer_profile),
+                        modifier = Modifier.size(60.dp),
+                        tint = MaterialTheme.colorScheme.onPrimaryContainer,
+                    )
+                }
             }
         }
 
@@ -278,17 +337,37 @@ private fun DrawerHeader(versionName: String) {
             style = MaterialTheme.typography.titleLarge,
             fontWeight = FontWeight.Bold,
         )
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Text(
-                text = "AS Team",
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.primary,
-            )
-        }
+        Text(
+            text = "AS Team",
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.primary,
+        )
         Text(
             text = stringResource(R.string.as_drawer_version, versionName),
             style = MaterialTheme.typography.labelMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
     }
+}
+
+private fun loadProfileImage(context: Context, uri: Uri): ImageBitmap? {
+    return runCatching {
+        val bounds = BitmapFactory.Options().apply { inJustDecodeBounds = true }
+        context.contentResolver.openInputStream(uri)?.use { stream ->
+            BitmapFactory.decodeStream(stream, null, bounds)
+        }
+
+        var sampleSize = 1
+        while (
+            bounds.outWidth / sampleSize > PROFILE_IMAGE_MAX_SIZE ||
+            bounds.outHeight / sampleSize > PROFILE_IMAGE_MAX_SIZE
+        ) {
+            sampleSize *= 2
+        }
+
+        val options = BitmapFactory.Options().apply { inSampleSize = sampleSize }
+        context.contentResolver.openInputStream(uri)?.use { stream ->
+            BitmapFactory.decodeStream(stream, null, options)?.asImageBitmap()
+        }
+    }.getOrNull()
 }

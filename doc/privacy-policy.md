@@ -6,29 +6,27 @@
 
 ## داده‌های ذخیره‌شده
 
-اطلاعاتی که کاربر در برنامه ایجاد می‌کند، از جمله حساب‌ها، تراکنش‌ها، موجودی‌ها، تنظیمات، زبان، پوسته و واحد پول انتخابی، در حافظه محلی دستگاه و دیتابیس داخلی برنامه نگهداری می‌شوند.
+اطلاعاتی که کاربر ایجاد می‌کند شامل حساب‌ها، تراکنش‌ها، موجودی‌ها، تنظیمات، زبان، پوسته و واحد پول انتخابی است و به‌صورت محلی روی دستگاه نگهداری می‌شود.
 
 ## ارسال اطلاعات به سرویس‌های ثالث
 
-نسخه فعلی AS-KharjYar برای Analytics یا Crash Reporting از Firebase Analytics یا Firebase Crashlytics استفاده نمی‌کند. انتخاب کشور و واحد پول، تراکنش‌ها و اطلاعات مالی کاربر برای این سرویس‌ها ارسال نمی‌شوند.
+نسخه فعلی AS-KharjYar از Firebase Analytics یا Firebase Crashlytics استفاده نمی‌کند. اطلاعات مالی، انتخاب کشور، واحد پول و تراکنش‌های کاربر به سرویس‌های تحلیلی یا تبلیغاتی ارسال نمی‌شوند.
 
-کد فعلی بخش ورود نیز سرویس احراز هویت آنلاین ندارد؛ اطلاعات ورود در پیاده‌سازی فعلی به سرور خارجی ارسال نمی‌شود.
+## Backup و Restore
+
+خرج‌یار دارای Backup/Restore دستی داخل برنامه است. این قابلیت فقط با اقدام مستقیم کاربر اجرا می‌شود و فایل پشتیبان تا زمانی که کاربر آن را به سرویس دیگری منتقل نکند، روی دستگاه باقی می‌ماند.
+
+Android Cloud Backup و Device Transfer خودکار برای جلوگیری از انتقال ناخواسته اطلاعات مالی غیرفعال شده‌اند.
 
 ## حذف اطلاعات
 
-کاربر می‌تواند با پاک‌کردن Data برنامه از تنظیمات Android یا حذف برنامه، داده‌های محلی آن را از دستگاه پاک کند. در نسخه‌های آینده که قابلیت Backup/Restore اضافه شود، سیاست مربوط به نسخه‌های پشتیبان نیز باید در همین سند به‌روزرسانی شود.
-
-## مجوزها و دسترسی‌ها
-
-خرج‌یار باید فقط مجوزهایی را درخواست کند که برای قابلیت‌های فعال برنامه لازم هستند. هر قابلیت آینده که نیازمند دسترسی جدید یا انتقال داده باشد، قبل از انتشار باید در این سند ثبت شود.
+کاربر می‌تواند با پاک‌کردن Data برنامه از تنظیمات Android یا حذف برنامه، داده‌های محلی را حذف کند.
 
 ## منبع و مجوز
 
-AS-KharjYar بر پایه پروژه متن‌باز Compose Expense / Wallee توسعه یافته و مجوز Apache License 2.0 و attribution مربوط به پروژه اصلی در مخزن حفظ شده است. تغییرات، فارسی‌سازی و شخصی‌سازی نسخه خرج‌یار توسط AS Team انجام می‌شود.
+AS-KharjYar بر پایه پروژه متن‌باز Compose Expense / Wallee توسعه یافته و مجوز Apache License 2.0 و attribution مربوط به پروژه اصلی در مخزن حفظ شده است.
 
 ## ارتباط با پشتیبانی
-
-برای پرسش‌های مربوط به حریم خصوصی یا گزارش مشکل امنیتی:
 
 AS.Developers.Support@Gmail.Com
 
@@ -38,12 +36,10 @@ AS.Developers.Support@Gmail.Com
 
 Last reviewed: September 2, 2026
 
-KharjYar is a local-first personal expense, income, account, and transaction manager maintained as the AS Team build of the project.
+KharjYar is a local-first personal expense and transaction manager maintained as the AS Team build.
 
-User-created financial data and app preferences are stored locally on the device. The current AS-KharjYar build does not use Firebase Analytics or Firebase Crashlytics, and financial records, country selection, and currency selection are not sent to those services.
+User-created financial data and preferences are stored locally on the device. The application does not use Firebase Analytics or Firebase Crashlytics.
 
-The current login implementation does not authenticate against an external server. Local app data can be removed by clearing the application's data or uninstalling the application.
-
-If a future version introduces cloud backup, synchronization, remote authentication, advertising, or another service that transfers user data, this policy must be updated before that version is published.
+Manual Backup and Restore is controlled by the user inside the application. Automatic Android cloud backup and device transfer are disabled to prevent unintended transfer of financial data.
 
 Security and privacy questions can be sent to AS.Developers.Support@Gmail.Com.

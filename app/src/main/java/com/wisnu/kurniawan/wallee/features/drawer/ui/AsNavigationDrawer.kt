@@ -188,27 +188,25 @@ fun AsNavigationDrawer(
                 }
             },
         ) {
-            // Keep the imported business UI in its original direction until full Persianization.
-            CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
-                Box(modifier = Modifier.fillMaxSize()) {
-                    content()
+            // The localized app content now inherits RTL instead of being forced back to LTR.
+            Box(modifier = Modifier.fillMaxSize()) {
+                content()
 
-                    // Unified AS hamburger entry point: top-right on every main app screen.
-                    Surface(
-                        modifier = Modifier
-                            .align(Alignment.TopEnd)
-                            .statusBarsPadding()
-                            .padding(top = 8.dp, end = 8.dp),
-                        shape = MaterialTheme.shapes.large,
-                        tonalElevation = 4.dp,
-                        shadowElevation = 2.dp,
-                    ) {
-                        IconButton(onClick = { scope.launch { drawerState.open() } }) {
-                            Icon(
-                                imageVector = Icons.Default.Menu,
-                                contentDescription = "باز کردن منوی اصلی",
-                            )
-                        }
+                // Unified AS hamburger entry point: top-right on every main app screen.
+                Surface(
+                    modifier = Modifier
+                        .align(Alignment.TopEnd)
+                        .statusBarsPadding()
+                        .padding(top = 8.dp, end = 8.dp),
+                    shape = MaterialTheme.shapes.large,
+                    tonalElevation = 4.dp,
+                    shadowElevation = 2.dp,
+                ) {
+                    IconButton(onClick = { scope.launch { drawerState.open() } }) {
+                        Icon(
+                            imageVector = Icons.Default.Menu,
+                            contentDescription = "باز کردن منوی اصلی",
+                        )
                     }
                 }
             }

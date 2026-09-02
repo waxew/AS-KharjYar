@@ -27,7 +27,8 @@ fun OnboardingState.rememberGroupedCurrencyItems() = remember(currencyItems, cur
     derivedStateOf {
         val defaultCurrency = currencyItems.find { it.countryCode == currentCountryCode }
         if (defaultCurrency != null) {
-            mapOf(" " to listOf(defaultCurrency)) + currencyItems.groupedCurrencyItems()
+            val remainingCurrencies = currencyItems.filterNot { it == defaultCurrency }
+            mapOf(" " to listOf(defaultCurrency)) + remainingCurrencies.groupedCurrencyItems()
         } else {
             currencyItems.groupedCurrencyItems()
         }

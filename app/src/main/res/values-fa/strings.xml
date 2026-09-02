@@ -1,0 +1,123 @@
+<resources>
+    <!-- Persian UI resources for the AS Team KharjYar build. -->
+    <string name="show_more">نمایش بیشتر</string>
+    <string name="add">افزودن</string>
+    <string name="welcome">خوش آمدید!</string>
+
+    <string name="login_login">ورود</string>
+    <string name="login_email">ایمیل</string>
+    <string name="login_email_invalid">ایمیل نامعتبر است</string>
+    <string name="login_password">رمز عبور</string>
+
+    <string name="category">دسته‌بندی</string>
+    <string name="category_monthly_fee">هزینه ماهانه</string>
+    <string name="category_admin_fee">هزینه اداری</string>
+    <string name="category_pets">نگهداری حیوانات</string>
+    <string name="category_donations">کمک و امور اجتماعی</string>
+    <string name="category_education">آموزش</string>
+    <string name="category_financial">امور مالی</string>
+    <string name="category_entertainment">سرگرمی</string>
+    <string name="category_children_needs">نیازهای کودکان</string>
+    <string name="category_household_needs">نیازهای خانه</string>
+    <string name="category_sport">سلامت و ورزش</string>
+    <string name="category_others">سایر</string>
+    <string name="category_food">غذا و نوشیدنی</string>
+    <string name="category_parking">پارکینگ</string>
+    <string name="category_fuel">سوخت</string>
+    <string name="category_movie">سینما</string>
+    <string name="category_automotive">خودرو</string>
+    <string name="category_tax">مالیات</string>
+    <string name="category_income">درآمد</string>
+    <string name="category_business_expenses">هزینه‌های کاری</string>
+    <string name="category_self_care">مراقبت شخصی</string>
+    <string name="category_loan">وام</string>
+    <string name="category_service">خدمات</string>
+    <string name="category_shopping">خرید</string>
+    <string name="category_bills">قبوض و خدمات</string>
+    <string name="category_taxi">تاکسی</string>
+    <string name="category_cash_withdrawal">برداشت نقدی</string>
+    <string name="category_phone">تلفن و اینترنت</string>
+    <string name="category_top_up">کیف پول الکترونیکی</string>
+    <string name="category_public_transportation">حمل‌ونقل عمومی</string>
+    <string name="category_travel">سفر</string>
+    <string name="category_uncategorized">بدون دسته‌بندی</string>
+    <string name="category_recent">پرکاربردها</string>
+    <string name="category_all">همه دسته‌بندی‌ها</string>
+
+    <string name="account_e_wallet">کیف پول الکترونیکی</string>
+    <string name="account_bank">بانک</string>
+    <string name="account_cash">نقدی</string>
+    <string name="account_investment">سرمایه‌گذاری</string>
+    <string name="account_others">سایر</string>
+
+    <string name="setting_title">منوی اصلی</string>
+    <string name="setting_theme">پوسته</string>
+    <string name="setting_theme_automatic">خودکار</string>
+    <string name="setting_theme_light">روشن</string>
+    <string name="setting_theme_twilight">گرگ‌ومیش</string>
+    <string name="setting_theme_night">تیره</string>
+    <string name="setting_theme_sunrise">طلوع</string>
+    <string name="setting_theme_aurora">شفق</string>
+    <string name="setting_logout">خروج</string>
+    <string name="setting_logout_confirm">از حساب خارج می‌شوید؟</string>
+    <string name="setting_language">زبان</string>
+
+    <string name="dashboard_transaction">تراکنش‌ها</string>
+    <string name="dashboard_balance">موجودی</string>
+
+    <string name="transaction_expense">هزینه</string>
+    <string name="transaction_income">درآمد</string>
+    <string name="transaction_transfer">انتقال</string>
+    <string name="transaction_edit_save">ذخیره</string>
+    <string name="transaction_edit_cancel">انصراف</string>
+    <string name="transaction_edit_add">افزودن تراکنش</string>
+    <string name="transaction_edit_expense">ویرایش هزینه</string>
+    <string name="transaction_edit_income">ویرایش درآمد</string>
+    <string name="transaction_edit_transfer">ویرایش انتقال</string>
+    <string name="transaction_edit_total">مبلغ</string>
+    <string name="transaction_edit_general">عمومی</string>
+    <string name="transaction_edit_account">حساب</string>
+    <string name="transaction_edit_account_from">از حساب</string>
+    <string name="transaction_edit_account_to">به حساب</string>
+    <string name="transaction_edit_date_transaction">تاریخ تراکنش</string>
+    <string name="transaction_edit_note">یادداشت (اختیاری)</string>
+    <string name="transaction_edit_note_expense_hint">مثال: «خرید غذا و نوشیدنی»</string>
+    <string name="transaction_edit_note_income_hint">مثال: «برای پس‌انداز»</string>
+    <string name="transaction_edit_note_transfer_hint">مثال: «برای اشتراک این ماه»</string>
+    <string name="transaction_summary">خلاصه</string>
+    <string name="transaction_this_month">این ماه</string>
+    <string name="transaction_last">آخرین تراکنش‌ها</string>
+    <string name="transaction_last_no_data_title">اولین تراکنش را ثبت کنید</string>
+    <string name="transaction_last_no_data_message">پنج تراکنش اخیر شما اینجا نمایش داده می‌شود.</string>
+    <string name="transaction_top_expenses">بیشترین هزینه‌ها</string>
+    <string name="transaction_top_expenses_no_data_message">پنج دسته با بیشترین هزینه این ماه اینجا نمایش داده می‌شود.</string>
+    <string name="transaction_edit_delete">حذف تراکنش</string>
+    <string name="transaction_account_deleted">[حساب حذف شده]</string>
+
+    <string name="all_transaction_headline">تراکنش‌ها</string>
+    <string name="all_transaction_empty">تراکنشی وجود ندارد</string>
+
+    <string name="account_edit_add">افزودن حساب</string>
+    <string name="account_edit_edit">ویرایش حساب</string>
+    <string name="account_edit_balance">موجودی فعلی</string>
+    <string name="account_edit_select_category">انتخاب نوع حساب</string>
+    <string name="account_edit_name">نام</string>
+    <string name="account_edit_name_hint">الزامی</string>
+    <string name="account_edit_name_duplicate">حسابی با این نام از قبل وجود دارد</string>
+    <string name="account_edit_delete">حذف حساب</string>
+
+    <string name="balance_all_time">از ابتدا</string>
+    <string name="balance_total_transaction">%1$s تراکنش</string>
+    <string name="balance_account_updated_at_second">چند لحظه پیش به‌روزرسانی شد</string>
+    <string name="balance_account_updated_at_minute">%1$s دقیقه پیش به‌روزرسانی شد</string>
+    <string name="balance_account_updated_at_hour">%1$s ساعت پیش به‌روزرسانی شد</string>
+    <string name="balance_account_updated_at_yesterday">دیروز به‌روزرسانی شد</string>
+    <string name="balance_account_updated_at_date">%1$s به‌روزرسانی شد</string>
+    <string name="balance_account_amount_change_title">علت اصلاح موجودی</string>
+    <string name="balance_account_amount_change_initial_reason">مدت زیادی تراکنش‌ها را ثبت نکرده‌ام</string>
+    <string name="balance_account_amount_change_initial_reason_desc">موجودی اولیه این حساب تغییر می‌کند.</string>
+    <string name="balance_account_amount_change_by_record_reason">چند تراکنش را فراموش کرده‌ام</string>
+    <string name="balance_account_amount_change_by_record_reason_desc">یک تراکنش اصلاحی برای این اختلاف ساخته می‌شود.</string>
+
+    <string name="onboarding_title">واحد پول کشور خود را انتخاب کنید</string>
+</resources>

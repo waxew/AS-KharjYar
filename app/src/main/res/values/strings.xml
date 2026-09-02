@@ -1,8 +1,10 @@
 <resources>
     <string name="app_name" translatable="false">خرج‌یار</string>
+
     <string name="setting_backup">Backup and restore data</string>
     <string name="backup_title">Backup and restore</string>
     <string name="backup_export">Export backup file</string>
     <string name="backup_import">Import backup file</string>
     <string name="backup_warning">Restore replaces current local data. Create a backup before continuing.</string>
+
 </resources>

@@ -64,12 +64,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import com.wisnu.kurniawan.wallee.R
+import com.wisnu.kurniawan.wallee.features.update.data.UpdateCheckResult
+import com.wisnu.kurniawan.wallee.features.update.data.UpdateChecker
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 private const val SUPPORT_EMAIL = "AS.Developers.Support@Gmail.Com"
-private const val RELEASES_URL = "https://github.com/waxew/AS-KharjYar/releases"
 private const val PROFILE_PREFS = "as_drawer_profile"
 private const val PROFILE_URI_KEY = "profile_uri"
 private const val PROFILE_NAME_KEY = "display_name"
@@ -95,7 +96,12 @@ fun AsNavigationDrawer(
     val appLayoutDirection = LocalLayoutDirection.current
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
+    val updateChecker = remember(context.applicationContext) {
+        UpdateChecker(context.applicationContext)
+    }
     var showAboutDialog by remember { mutableStateOf(false) }
+    var checkingUpdates by remember { mutableStateOf(false) }
+    var updateResult by remember { mutableStateOf<UpdateCheckResult?>(null) }
 
     val appTitle = stringResource(R.string.app_name)
     val shareText = stringResource(R.string.as_drawer_share_text, appTitle)
@@ -108,7 +114,6 @@ fun AsNavigationDrawer(
         }.getOrNull().orEmpty().ifBlank { "—" }
     }
 
-    // Android Back closes the drawer first; it must not exit the app while the menu is visible.
     BackHandler(enabled = drawerState.isOpen) {
         scope.launch { drawerState.close() }
     }
@@ -130,11 +135,9 @@ fun AsNavigationDrawer(
                         .widthIn(max = 328.dp),
                 ) {
                     DrawerHeader(versionName = versionName)
-
                     HorizontalDivider(modifier = Modifier.padding(horizontal = 16.dp))
                     Spacer(Modifier.height(8.dp))
 
-                    // AS Team global drawer contract: Settings = index 0, Share = index 1.
                     NavigationDrawerItem(
                         label = { Text(stringResource(R.string.as_drawer_settings)) },
                         selected = false,
@@ -152,9 +155,7 @@ fun AsNavigationDrawer(
                                     type = "text/plain"
                                     putExtra(Intent.EXTRA_TEXT, shareText)
                                 }
-                                context.startActivity(
-                                    Intent.createChooser(shareIntent, shareChooserTitle)
-                                )
+                                context.startActivity(Intent.createChooser(shareIntent, shareChooserTitle))
                             }
                         },
                         modifier = Modifier.padding(horizontal = 12.dp),
@@ -212,13 +213,11 @@ fun AsNavigationDrawer(
                 }
             },
         ) {
-            // This parent stays RTL so TopStart is the physical top-right corner.
             Box(modifier = Modifier.fillMaxSize()) {
                 CompositionLocalProvider(LocalLayoutDirection provides appLayoutDirection) {
                     content()
                 }
 
-                // Unified AS hamburger entry point: fixed at the physical top-right.
                 Surface(
                     modifier = Modifier
                         .align(Alignment.TopStart)
@@ -242,24 +241,34 @@ fun AsNavigationDrawer(
     if (showAboutDialog) {
         CompositionLocalProvider(LocalLayoutDirection provides appLayoutDirection) {
             AlertDialog(
-                onDismissRequest = { showAboutDialog = false },
+                onDismissRequest = { if (!checkingUpdates) showAboutDialog = false },
                 confirmButton = {
-                    TextButton(onClick = { showAboutDialog = false }) {
+                    TextButton(
+                        enabled = !checkingUpdates,
+                        onClick = { showAboutDialog = false },
+                    ) {
                         Text(stringResource(R.string.as_drawer_close))
                     }
                 },
                 dismissButton = {
                     TextButton(
+                        enabled = !checkingUpdates,
                         onClick = {
-                            showAboutDialog = false
-                            runCatching {
-                                context.startActivity(
-                                    Intent(Intent.ACTION_VIEW, Uri.parse(RELEASES_URL))
-                                )
+                            scope.launch {
+                                checkingUpdates = true
+                                updateResult = updateChecker.check()
+                                checkingUpdates = false
+                                showAboutDialog = false
                             }
-                        }
+                        },
                     ) {
-                        Text(stringResource(R.string.as_drawer_check_updates))
+                        Text(
+                            if (checkingUpdates) {
+                                stringResource(R.string.as_drawer_update_checking)
+                            } else {
+                                stringResource(R.string.as_drawer_check_updates)
+                            }
+                        )
                     }
                 },
                 icon = { Icon(Icons.Default.Info, contentDescription = null) },
@@ -277,6 +286,79 @@ fun AsNavigationDrawer(
             )
         }
     }
+
+    updateResult?.let { result ->
+        CompositionLocalProvider(LocalLayoutDirection provides appLayoutDirection) {
+            UpdateResultDialog(
+                result = result,
+                onDismiss = { updateResult = null },
+                onOpenRelease = { url ->
+                    updateResult = null
+                    runCatching {
+                        context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
+                    }
+                },
+            )
+        }
+    }
+}
+
+@Composable
+private fun UpdateResultDialog(
+    result: UpdateCheckResult,
+    onDismiss: () -> Unit,
+    onOpenRelease: (String) -> Unit,
+) {
+    val title: String
+    val body: String
+
+    when (result) {
+        is UpdateCheckResult.UpdateAvailable -> {
+            title = stringResource(R.string.as_drawer_update_available_title)
+            body = stringResource(
+                R.string.as_drawer_update_available_body,
+                result.release.versionName,
+            )
+        }
+        UpdateCheckResult.UpToDate -> {
+            title = stringResource(R.string.as_drawer_up_to_date_title)
+            body = stringResource(R.string.as_drawer_up_to_date_body)
+        }
+        UpdateCheckResult.NoPublishedRelease -> {
+            title = stringResource(R.string.as_drawer_no_release_title)
+            body = stringResource(R.string.as_drawer_no_release_body)
+        }
+        UpdateCheckResult.Failed -> {
+            title = stringResource(R.string.as_drawer_update_failed_title)
+            body = stringResource(R.string.as_drawer_update_failed_body)
+        }
+    }
+
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text(title) },
+        text = { Text(body) },
+        confirmButton = {
+            if (result is UpdateCheckResult.UpdateAvailable) {
+                TextButton(onClick = { onOpenRelease(result.releaseUrl) }) {
+                    Text(stringResource(R.string.as_drawer_update_now))
+                }
+            } else {
+                TextButton(onClick = onDismiss) {
+                    Text(stringResource(R.string.as_drawer_ok))
+                }
+            }
+        },
+        dismissButton = if (result is UpdateCheckResult.UpdateAvailable) {
+            {
+                TextButton(onClick = onDismiss) {
+                    Text(stringResource(R.string.as_drawer_update_later))
+                }
+            }
+        } else {
+            null
+        },
+    )
 }
 
 @Composable

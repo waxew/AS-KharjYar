@@ -63,6 +63,10 @@ jobs:
       - name: Build debug, release APK and release AAB
         run: ./gradlew assembleDebug assembleRelease bundleRelease --stacktrace
 
+      - name: Package exact source snapshot
+        shell: bash
+        run: git archive --format=zip --output=AS-KharjYar-source.zip HEAD
+
       - name: Upload Android artifacts
         if: success()
         uses: actions/upload-artifact@v4
@@ -72,4 +76,5 @@ jobs:
             app/build/outputs/apk/debug/*.apk
             app/build/outputs/apk/release/*.apk
             app/build/outputs/bundle/release/*.aab
+            AS-KharjYar-source.zip
           if-no-files-found: error
